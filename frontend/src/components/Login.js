@@ -14,12 +14,13 @@ function Login() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const res = await axios.post('http://localhost:8081/login', { email, password });
+      const res = await axios.post('http://localhost:8081/auth/login', { email, password });
       setMensaje(`Bienvenido`);
       setTimeout(() => {
-        navigate('/CursoPDF'); // Redirigir a cursopdf.js
+        navigate('/CursoPDF');
       }, 1000);
     } catch (err) {
+      console.error("Error en el cliente:", err.response?.data || err.message); // Agrega este log
       setMensaje('Credenciales incorrectas');
     }
   };
@@ -27,7 +28,7 @@ function Login() {
   const handleRegister = async (e) => {
     e.preventDefault();
     try {
-      const res = await axios.post('http://localhost:8081/register', {
+      const res = await axios.post('http://localhost:8081/auth/register', {
         email: registroEmail,
         password: registroPassword,
       });
