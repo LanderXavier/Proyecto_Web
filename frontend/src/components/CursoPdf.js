@@ -3,6 +3,7 @@ import { Button, Form, Card, Container } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import CursoFormato from './CursoFormato.js';
 import html2pdf from 'html2pdf.js';
+import axios from 'axios';
 
 const CursoPdf = () => {
   const [curso, setCurso] = useState({
@@ -34,7 +35,19 @@ const CursoPdf = () => {
       [name]: value
     }));
   };
-
+  // Función para guardar en la base de datos
+  const handleSaveToDatabase = async () => {
+    try {
+      const response = await axios.post(`${process.env.REACT_APP_API_URL}/signature/create`, {
+        name: curso.nombre,
+        code: curso.codigo,
+      });
+      alert(response.data.message); // Muestra un mensaje de éxito
+    } catch (error) {
+      console.error('Error al guardar en la base de datos:', error);
+      alert('Error al guardar en la base de datos');
+    }
+  };
   const handlePreview = () => {
     setMostrarFormato(true);
   };
@@ -154,9 +167,14 @@ const CursoPdf = () => {
           Previsualizar Formato
         </Button>
         {mostrarFormato && (
-          <Button variant="success" onClick={handleSave}>
-            Guardar como PDF
-          </Button>
+          <div>
+            <Button variant="success" onClick={handleSave}>
+              Guardar como PDF
+            </Button>
+            <Button variant="info" onClick={handleSaveToDatabase}>
+              Guardar en la Base de Datos
+            </Button>
+          </div>
         )}
       </div>
 
