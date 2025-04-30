@@ -11,6 +11,8 @@ sequelize.sync({ force: false }) // Cambia a `true` para reiniciar tablas (solo 
   .then(() => console.log('Base de datos sincronizada'))
   .catch(err => console.error('Error al sincronizar la base de datos:', err));
 
+  
+
 // Middleware
 app.use(cors());
 app.use(express.json());

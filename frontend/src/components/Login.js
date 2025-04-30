@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+const API_URL = process.env.REACT_APP_API_URL;
+
 
 function Login() {
   const [email, setEmail] = useState('');
@@ -14,25 +16,26 @@ function Login() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const res = await axios.post('http://localhost:8081/auth/login', { email, password });
+      await axios.post(`${API_URL}/auth/login`, { email, password }); // Elimina "res"
       setMensaje(`Bienvenido`);
       setTimeout(() => {
-        navigate('/CursoPDF');
+        navigate('/CursoPdf');
       }, 1000);
     } catch (err) {
-      console.error("Error en el cliente:", err.response?.data || err.message); // Agrega este log
+      console.error("Error en el cliente:", err.response?.data || err.message);
       setMensaje('Credenciales incorrectas');
     }
   };
+  
 
   const handleRegister = async (e) => {
     e.preventDefault();
     try {
-      const res = await axios.post('http://localhost:8081/auth/register', {
+      await axios.post(`${API_URL}/auth/register`, { // Elimina "res"
         email: registroEmail,
         password: registroPassword,
       });
-      setRegistroMensaje(res.data.message);
+      setRegistroMensaje('Usuario registrado correctamente');
       setRegistroEmail('');
       setRegistroPassword('');
     } catch (err) {
