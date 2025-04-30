@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Syllabus</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    /* Fuente para todo el PDF */
+    #pdf-content {
+      font-family: 'Georgia', serif;
+      font-size: 12pt;
+      color: #000;
+    }
+  
+    .pdf-header {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    .pdf-header h2 {
+      margin: 0;
+      color: #0c2340;
+      font-weight: bold;
+      font-size: 20pt;
+    }
+  
+    /* Tabla general */
+    .main-table {
+      width: 100%;
+      border-collapse: collapse;
+      border: 2px solid #003366; /* Borde general de la tabla */
+      margin-bottom: 20px;
+    }
+
+    .main-table th, .main-table td {
+      border: 1.5px solid #003366; /* Bordes individuales */
+      padding: 10px 15px;
+      text-align: left;
+      vertical-align: middle;
+      font-size: 11pt;
+    }
+    .main-table th {
+      background-color: #003366;
+      color: white;
+      font-weight: bold;
+      text-align: center;
+    }
+  
+    /* Celdas principales */
+    .bold {
+      font-weight: bold;
+      background-color: #e9ecef;
+    }
+  
+    /* Títulos de secciones */
+    .section-title {
+      background-color: #003366;
+      color: white;
+      padding: 12px;
+      font-weight: 900;
+      font-size: 14pt;
+      text-align: center;
+      border-top: 4px double #003366;
+      border-bottom: 4px double #003366;
+      margin-top: 30px;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+    }
+    .subheader {
+      background-color: #cce0f5; /* Azul clarito bonito */
+      color: #003366;
+      font-weight: bold;
+      text-align: center;
+    }
+    .description-text {
+      text-align: justify;
+      padding: 10px 15px;
+      font-size: 11pt;
+    }
+
+  
+    /* Párrafos normales */
+    #pdf-content p {
+      margin: 10px 0;
+      text-align: justify;
+    }
+  </style>
+  
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="container py-5">
+    <h1 class="text-center mb-4">Generador de Syllabus</h1>
+
+    <form class="row g-3">
+      <!-- Primera fila -->
+      <div class="col-md-6">
+        <label for="school" class="form-label">Escuela:</label>
+        <input type="text" id="school" class="form-control">
+      </div>
+      <div class="col-md-6">
+        <label for="major" class="form-label">Carrera:</label>
+        <input type="text" id="major" class="form-control">
+      </div>
+
+      <!-- Segunda fila -->
+      <div class="col-md-6">
+        <label for="course" class="form-label">Curso:</label>
+        <input type="text" id="course" class="form-control">
+      </div>
+      <div class="col-md-6">
+        <label for="code" class="form-label">Código:</label>
+        <input type="text" id="code" class="form-control">
+      </div>
+
+      <!-- Tercera fila -->
+      <div class="col-md-6">
+        <label for="level" class="form-label">Nivel:</label>
+        <input type="text" id="level" class="form-control">
+      </div>
+      <div class="col-md-6">
+        <label for="term" class="form-label">Periodo académico:</label>
+        <input type="text" id="term" class="form-control">
+      </div>
+
+      <!-- Cuarta fila -->
+      <div class="col-md-6">
+        <label for="mode" class="form-label">Modalidad de estudio:</label>
+        <input type="text" id="mode" class="form-control">
+      </div>
+      <div class="col-md-6">
+        <label for="unit" class="form-label">Unidad curricular:</label>
+        <input type="text" id="unit" class="form-control">
+      </div>
+
+      <!-- Quinta fila -->
+      <div class="col-md-6">
+        <label for="hours" class="form-label">Total de horas:</label>
+        <input type="text" id="hours" class="form-control">
+      </div>
+      <div class="col-md-6">
+        <label for="professor" class="form-label">Profesor(es):</label>
+        <input type="text" id="professor" class="form-control">
+      </div>
+
+      <!-- Sexta fila -->
+      <div class="col-md-6">
+        <label for="class_schedule" class="form-label">Horario de clases:</label>
+        <input type="text" id="class_schedule" class="form-control">
+      </div>
+      <div class="col-md-6">
+        <label for="tutoring_schedule" class="form-label">Horario de tutorías:</label>
+        <input type="text" id="tutoring_schedule" class="form-control">
+      </div>
+
+      <!-- Textareas -->
+      <div class="col-12">
+        <label for="description" class="form-label">Descripción del curso:</label>
+        <textarea id="description" class="form-control" rows="3"></textarea>
+      </div>
+      <div class="col-12">
+        <label for="contribution" class="form-label">Contribución del curso a la formación:</label>
+        <textarea id="contribution" class="form-control" rows="3"></textarea>
+      </div>
+
+
+      <!-- Prerequisitos -->
+      <div class="col-md-6">
+        <label for="prerequisite_course" class="form-label">Curso Prerequisito:</label>
+        <input type="text" id="prerequisite_course" class="form-control">
+      </div>
+      <div class="col-md-6">
+        <label for="prerequisite_code" class="form-label">Código Prerequisito:</label>
+        <input type="text" id="prerequisite_code" class="form-control">
+      </div>
+
+      <!-- Corequisitos -->
+      <div class="col-md-6">
+        <label for="corequisite_course" class="form-label">Curso Corequisito:</label>
+        <input type="text" id="corequisite_course" class="form-control">
+      </div>
+      <div class="col-md-6">
+        <label for="corequisite_code" class="form-label">Código Corequisito:</label>
+        <input type="text" id="corequisite_code" class="form-control">
+      </div>
+
+
+      <!-- Botón -->
+      <div class="col-12 text-center">
+        <button type="button" class="btn btn-primary px-5" onclick="generatePDF()">Generar PDF</button>
+      </div>
+    </form>
+
+    <!-- Contenido oculto para el PDF -->
+    <div id="pdf-content" style="display: none;">
+      <div class="pdf-header">
+        <h2>YACHAY TECH UNIVERSITY</h2>
+        <h2>SYLLABUS</h2>
+      </div>
+
+      <table class="main-table">
+        <thead>
+          <tr><th colspan="4" class="section-title">1. General Information</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="bold">A. SCHOOL</td><td id="out-school"></td>
+            <td class="bold">B. MAJOR</td><td id="out-major"></td>
+          </tr>
+          <tr>
+            <td class="bold">C. COURSE</td><td id="out-course"></td>
+            <td class="bold">D. CODE</td><td id="out-code"></td>
+          </tr>
+          <tr>
+            <td class="bold">E. LEVEL</td><td id="out-level"></td>
+            <td class="bold">F. ACADEMIC TERM</td><td id="out-term"></td>
+          </tr>
+          <tr>
+            <td class="bold">G. CURRICULAR UNIT</td><td id="out-unit"></td>
+            <td class="bold">H. STUDY MODE</td><td id="out-mode"></td>
+          </tr>
+          <tr>
+            <td class="bold">I. TOTAL HOURS</td><td id="out-hours"></td>
+            <td class="bold">J. PROFESSORS</td><td id="out-professor"></td>
+          </tr>
+          <tr>
+            <td class="bold">K. WEEKLY CLASS SCHEDULE</td><td colspan="3" id="out-class_schedule"></td>
+          </tr>
+          <tr>
+            <td class="bold">L. WEEKLY TUTORING SCHEDULE</td><td colspan="3" id="out-tutoring_schedule"></td>
+          </tr>
+        </tbody>
+      </table>
+
+
+      <!-- PREREQUISITES AND COREQUISITES -->
+       
+      <table class="main-table">
+        <thead>
+          <tr><th colspan="4" class="section-title">2. Prerequisites and Corequisites</th></tr>
+          <tr>
+            <th colspan="2" class="subheader">PREREQUISITES</th>
+            <th colspan="2" class="subheader">COREQUISITES</th>
+          </tr>
+          <tr>
+            <th>COURSE</th><th>CODE</th><th>COURSE</th><th>CODE</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td id="out-prerequisite_course"></td><td id="out-prerequisite_code"></td>
+            <td id="out-corequisite_course"></td><td id="out-corequisite_code"></td>
+          </tr>
+        </tbody>
+      </table>
+      
+      
+      <!-- DESCRIPTIONS -->
+      
+      <div class="section-title">3. Course Description</div>
+      <p id="out-description"></p>
+
+      <div class="section-title">4. Course Contribution to Professional Training</div>
+      <p id="out-contribution"></p>
+    </div>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>

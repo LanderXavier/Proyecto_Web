@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Información del Curso</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f9;
+      margin: 0;
+      padding: 0;
+    }
+    .container {
+      max-width: 800px;
+      margin: 20px auto;
+      background: #ffffff;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      padding: 20px;
+    }
+    h1 {
+      text-align: center;
+      color: #333;
+      margin-bottom: 20px;
+    }
+    .section {
+      margin-bottom: 15px;
+    }
+    .section strong {
+      color: #555;
+    }
+    .section div {
+      margin-left: 15px;
+      color: #333;
+    }
+    .btn {
+      display: inline-block;
+      padding: 10px 20px;
+      font-size: 16px;
+      color: #fff;
+      background-color: #007bff;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      text-align: center;
+      text-decoration: none;
+    }
+    .btn:hover {
+      background-color: #0056b3;
+    }
+    .text-center {
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Información del Curso</h1>
+    <div class="section"><strong>Nombre del Curso:</strong> <div>{{nombre}}</div></div>
+    <div class="section"><strong>Código:</strong> <div>{{codigo}}</div></div>
+    <div class="section"><strong>Semestre:</strong> <div>{{semestre}}</div></div>
+    <div class="section"><strong>Total de Horas:</strong> <div>{{totalHoras}}</div></div>
+    <div class="section">
+      <strong>Descripción del Curso:</strong>
+      <div>{{descripcion}}</div>
+    </div>
+    <div class="section">
+      <strong>Objetivos del Curso:</strong>
+      <div>{{objetivos}}</div>
+    </div>
+    <div class="section">
+      <strong>Temas:</strong>
+      <div>{{temas}}</div>
+    </div>
+    <div class="section">
+      <strong>Bibliografía:</strong>
+      <div>{{bibliografia}}</div>
+    </div>
+
+    <!-- Botón para generar el PDF -->
+    <div class="text-center mt-4">
+      <button id="generate-pdf" class="btn">Generar PDF</button>
+    </div>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.3/html2pdf.bundle.min.js"></script>
+  <script>
+    document.getElementById('generate-pdf').addEventListener('click', () => {
+      const element = document.querySelector('.container'); // Selecciona solo el contenido del contenedor
+      const opt = {
+        margin: 10,
+        filename: 'curso.pdf',
+        image: { type: 'jpeg', quality: 0.98 },
+        html2canvas: { scale: 2 },
+        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+      };
+
+      html2pdf().from(element).set(opt).save();
+    });
+  </script>
+</body>
+</html>
