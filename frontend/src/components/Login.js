@@ -16,10 +16,12 @@ function Login() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.post(`${API_URL}/auth/login`, { email, password }); // Elimina "res"
+      const response = await axios.post(`${API_URL}/auth/login`, { email, password });
+      const { token } = response.data; // Extrae el token de la respuesta
+      localStorage.setItem('token', token); // Guarda el token en localStorage
       setMensaje(`Bienvenido`);
       setTimeout(() => {
-        navigate('/CursoPdf');
+        navigate('/CursoPdf'); // Redirige a CursoPdf.js
       }, 1000);
     } catch (err) {
       console.error("Error en el cliente:", err.response?.data || err.message);

@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom'; // Para redirigir al login
 import { Button, Form, Card, Container } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import CursoFormato from './CursoFormato.js';
@@ -18,15 +19,16 @@ const CursoPdf = () => {
   });
   const [mostrarFormato, setMostrarFormato] = useState(false);
   const printRef = useRef();
+  const navigate = useNavigate(); // Hook para redirigir
 
   // Verificar si el token existe
   useEffect(() => {
     const token = localStorage.getItem('token');
     if (!token) {
       // Redirigir si no hay token (no está autenticado)
-      window.location.href = '/login'; // Redirigir al login
+      navigate('/'); // Redirigir al login
     }
-  }, []);
+  }, [navigate]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -35,25 +37,34 @@ const CursoPdf = () => {
       [name]: value
     }));
   };
-  // Función para guardar en la base de datos
+
   const handleSaveToDatabase = async () => {
     try {
-      const response = await axios.post(`${process.env.REACT_APP_API_URL}/signature/create`, {
-        name: curso.nombre,
-        code: curso.codigo,
-      });
+      const token = localStorage.getItem('token'); // Obtener el token
+      const response = await axios.post(
+        `${process.env.REACT_APP_API_URL}/signature/create`,
+        {
+          name: curso.nombre,
+          code: curso.codigo,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`, // Enviar el token en los headers
+          },
+        }
+      );
       alert(response.data.message); // Muestra un mensaje de éxito
     } catch (error) {
       console.error('Error al guardar en la base de datos:', error);
       alert('Error al guardar en la base de datos');
     }
   };
+
   const handlePreview = () => {
     setMostrarFormato(true);
   };
 
-  // Función para guardar como PDF
-  const handleSave = () => {
+const handleSave = () => {
     const options = {
       margin: 1,
       filename: `${curso.nombre}-curso.pdf`,

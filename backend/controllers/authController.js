@@ -39,7 +39,7 @@ exports.register = async (req, res) => {
         return res.status(401).json({ message: "Credenciales incorrectas" });
       }
     } catch (error) {
-      console.error("Error en el login:", error); // Agrega este log para depurar
+      console.error("Error en el login:", error);
       return res.status(500).json({ message: "Error al iniciar sesión", error });
     }
   };
