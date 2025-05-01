@@ -21,7 +21,7 @@ function Login() {
       localStorage.setItem('token', token); // Guarda el token en localStorage
       setMensaje(`Bienvenido`);
       setTimeout(() => {
-        navigate('/CursoPdf'); // Redirige a CursoPdf.js
+        navigate('/dashboard'); // Redirige a CursoPdf.js
       }, 1000);
     } catch (err) {
       console.error("Error en el cliente:", err.response?.data || err.message);
