@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom'; // Para redirigir al login
+import { useNavigate } from 'react-router-dom'; 
 import { Button, Form, Card, Container } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import CursoFormato from './CursoFormato.js';
@@ -15,45 +15,96 @@ const CursoPdf = () => {
     descripcion: '',
     objetivos: '',
     temas: '',
-    bibliografia: ''
+    bibliografia: '',
+    ID_program: '', // Agregado para almacenar el ID_program
+    school: '',
+    methodology: '',
+    prerequisites: '',
+    corequisites: ''
   });
+
+  const [programData, setProgramData] = useState([]);
   const [mostrarFormato, setMostrarFormato] = useState(false);
   const printRef = useRef();
-  const navigate = useNavigate(); // Hook para redirigir
+  const navigate = useNavigate();
 
   // Verificar si el token existe
   useEffect(() => {
     const token = localStorage.getItem('token');
     if (!token) {
-      // Redirigir si no hay token (no está autenticado)
-      navigate('/'); // Redirigir al login
+      navigate('/'); 
     }
   }, [navigate]);
 
+  // Obtener los programas disponibles
+  useEffect(() => {
+    const fetchProgramData = async () => {
+      try {
+        const token = localStorage.getItem('token'); // Obtén el token del usuario
+        const response = await axios.get(
+          `${process.env.REACT_APP_API_URL}/program/programs`, // Endpoint para obtener los programas
+          {
+            headers: {
+              Authorization: `Bearer ${token}`, // Envía el token en los headers
+            },
+          }
+        );
+        setProgramData(response.data); // Guarda los programas en el estado
+      } catch (error) {
+        console.error('Error al obtener los programas:', error);
+      }
+    };
+
+    fetchProgramData();
+  }, []);
+
+  // Auto completar los campos basados en el programa seleccionado
+  useEffect(() => {
+    if (curso.ID_program) {
+      const selectedProgram = programData.find((program) => program.ID_program === parseInt(curso.ID_program));
+      if (selectedProgram) {
+        setCurso((prevCurso) => ({
+          ...prevCurso,
+          nombre: selectedProgram.curricular_unit,
+          codigo: selectedProgram.Syllabus_id,
+          semestre: selectedProgram.semester,
+          descripcion: selectedProgram.content,
+          totalHoras: selectedProgram.total_hours,
+          school: selectedProgram.school,
+          methodology: selectedProgram.methodology,
+          prerequisites: selectedProgram.prerequisites,
+          corequisites: selectedProgram.corequisites,
+        }));
+      }
+    }
+  }, [curso.ID_program, programData]);
+
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setCurso(prev => ({
+    setCurso((prev) => ({
       ...prev,
-      [name]: value
+      [name]: value,
     }));
   };
 
   const handleSaveToDatabase = async () => {
     try {
-      const token = localStorage.getItem('token'); // Obtener el token
+      const token = localStorage.getItem('token');
       const response = await axios.post(
-        `${process.env.REACT_APP_API_URL}/signature/create`,
+        `${process.env.REACT_APP_API_URL}/Syllabus/create`,
         {
+          ID_program: curso.ID_program, // Enviar el ID del programa
           name: curso.nombre,
           code: curso.codigo,
+          // Otros campos necesarios para el syllabus...
         },
         {
           headers: {
-            Authorization: `Bearer ${token}`, // Enviar el token en los headers
+            Authorization: `Bearer ${token}`,
           },
         }
       );
-      alert(response.data.message); // Muestra un mensaje de éxito
+      alert(response.data.message);
     } catch (error) {
       console.error('Error al guardar en la base de datos:', error);
       alert('Error al guardar en la base de datos');
@@ -64,13 +115,13 @@ const CursoPdf = () => {
     setMostrarFormato(true);
   };
 
-const handleSave = () => {
+  const handleSave = () => {
     const options = {
       margin: 1,
       filename: `${curso.nombre}-curso.pdf`,
       image: { type: 'jpeg', quality: 0.98 },
       html2canvas: { scale: 4 },
-      jsPDF: { unit: 'mm', format: 'a4', orientation: 'landscape' }
+      jsPDF: { unit: 'mm', format: 'a4', orientation: 'landscape' },
     };
 
     html2pdf()
@@ -86,6 +137,23 @@ const handleSave = () => {
       <Card className="mb-4">
         <Card.Body>
           <Form>
+            <Form.Group className="mb-3">
+              <Form.Label>Seleccionar Programa</Form.Label>
+              <Form.Control
+                as="select"
+                name="ID_program"
+                value={curso.ID_program}
+                onChange={handleChange}
+              >
+                <option value="">Seleccione un programa</option>
+                {programData.map((program) => (
+                  <option key={program.ID_program} value={program.ID_program}>
+                    {program.curricular_unit}
+                  </option>
+                ))}
+              </Form.Control>
+            </Form.Group>
+
             <Form.Group className="mb-3">
               <Form.Label>Nombre del Curso</Form.Label>
               <Form.Control 
@@ -166,6 +234,47 @@ const handleSave = () => {
                 rows={3} 
                 name="bibliografia" 
                 value={curso.bibliografia} 
+                onChange={handleChange} 
+              />
+            </Form.Group>
+
+            <Form.Group className="mb-3">
+              <Form.Label>Escuela</Form.Label>
+              <Form.Control 
+                type="text" 
+                name="school" 
+                value={curso.school} 
+                onChange={handleChange} 
+              />
+            </Form.Group>
+
+            <Form.Group className="mb-3">
+              <Form.Label>Metodología</Form.Label>
+              <Form.Control 
+                as="textarea" 
+                rows={3} 
+                name="methodology" 
+                value={curso.methodology} 
+                onChange={handleChange} 
+              />
+            </Form.Group>
+
+            <Form.Group className="mb-3">
+              <Form.Label>Prerequisitos</Form.Label>
+              <Form.Control 
+                type="text" 
+                name="prerequisites" 
+                value={curso.prerequisites} 
+                onChange={handleChange} 
+              />
+            </Form.Group>
+
+            <Form.Group className="mb-3">
+              <Form.Label>Corequisitos</Form.Label>
+              <Form.Control 
+                type="text" 
+                name="corequisites" 
+                value={curso.corequisites} 
                 onChange={handleChange} 
               />
             </Form.Group>

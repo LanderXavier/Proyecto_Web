@@ -3,7 +3,9 @@ const cors = require('cors');
 const authRoutes = require('./routes/authRoutes');
 const sequelize = require('./models/db');
 const Login = require('./models/Login');
-const signatureRoutes = require('./routes/signatureRoutes');
+const SyllabusRoutes = require('./routes/SyllabusRoutes');
+const ProgramRoutes = require('./routes/ProgramRoutes');
+
 
 const app = express();
 
@@ -20,8 +22,12 @@ app.use(express.json());
 
 // Rutas
 app.use('/auth', authRoutes); // Esto significa que todas las rutas de authRoutes tendrán el prefijo /auth
-// Agregar las rutas de signature
-app.use('/signature', signatureRoutes);
+// Agregar las rutas de Syllabus
+app.use('/Syllabus', SyllabusRoutes);
+// Agregar las rutas de Program
+app.use('/Program', ProgramRoutes);
+
+
 // Iniciar servidor
 app.listen(8081, () => {
   console.log('Server is running on port 8081');

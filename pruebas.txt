@@ -1,0 +1,133 @@
+-- Ejecutar las inserciones en este orden específico para evitar errores de clave foránea
+
+-- 1. Primero, crear los logins
+INSERT INTO Login (email, password) VALUES 
+('profesor1@yachaytech.edu.ec', 'hash_contraseña_1'),
+('profesor2@yachaytech.edu.ec', 'hash_contraseña_2'),
+('supervisor1@yachaytech.edu.ec', 'hash_contraseña_3'),
+('supervisor2@yachaytech.edu.ec', 'hash_contraseña_4'),
+('profesor3@yachaytech.edu.ec', 'hash_contraseña_5');
+
+-- 2. Segundo, crear los perfiles de usuario
+INSERT INTO UserProfile (login_id, role, name, school, department_id) VALUES 
+(1, 'professor', 'Carlos Mendoza', 'Ciencias de la Computación', 'COMP'),
+(2, 'professor', 'Ana Suárez', 'Ciencias Biológicas', 'BIO'),
+(3, 'supervisor', 'María Rodríguez', 'Rectorado', NULL),
+(4, 'supervisor', 'Jorge Vázquez', 'Vicerrectorado Académico', NULL),
+(5, 'professor', 'Laura Pérez', 'Física', 'PHY');
+
+-- 3. Crear las aulas
+INSERT INTO Classroom (classroom_id, name, capacity) VALUES 
+(101, 'A101', 40),
+(102, 'A102', 30),
+(103, 'B201', 25),
+(104, 'LAB-CS1', 20),
+(105, 'LAB-BIO', 15);
+
+-- 4. Crear las asignaturas (Signatures)
+INSERT INTO Signature (signature_id, name, code, credits, description, objectives, contribution_text, has_lab, parent_classroom_id) VALUES 
+('CS1001', 'Programación 1', 'PROG1', '6', 'Introducción a la programación', 'Desarrollar habilidades básicas de programación', 'Contribuye a los resultados de aprendizaje 1, 2 y 3', 'true', 101),
+('CS1002', 'Algoritmos', 'ALG1', '4', 'Fundamentos de algoritmos', 'Comprender la complejidad algorítmica', 'Contribuye a los resultados de aprendizaje 2, 4 y 5', 'false', 102),
+('BIO2001', 'Biología Celular', 'BIOC', '5', 'Estudio de células', 'Entender estructuras celulares', 'Contribuye a los resultados de aprendizaje 1, 3 y 6', 'true', 105),
+('PHY1001', 'Física Básica', 'FIS1', '5', 'Conceptos fundamentales de física', 'Comprender leyes físicas básicas', 'Contribuye a los resultados de aprendizaje 2, 5 y 7', 'true', 103),
+('CS2001', 'Bases de Datos', 'BD1', '5', 'Diseño de bases de datos', 'Modelar y consultar bases de datos', 'Contribuye a los resultados de aprendizaje 3, 5 y 8', 'true', 104);
+
+-- 5. Crear los programas
+INSERT INTO Program (ID_program, signature_id, curricular_unit, content, teaching_hours, internship_hours, independent_learning_hours, total_hours, semester, school, methodology, prerequisites, corequisites, learning_outcomes, bibliography) VALUES 
+(1, 'CS1001', 'Unidad Profesional', 'Programación estructurada, tipos de datos, control de flujo', 64, 32, 80, 176, 1, 'Ciencias de la Computación', 'Clases teórico-prácticas, trabajos grupales', NULL, NULL, 'Crear algoritmos básicos, implementar soluciones simples', 'Introducción a la Programación, J. Pérez (2020)'),
+(2, 'CS1002', 'Unidad Profesional', 'Análisis de complejidad, búsqueda, ordenamiento', 48, 16, 64, 128, 2, 'Ciencias de la Computación', 'Clases teóricas, resolución de problemas', 'CS1001', NULL, 'Analizar eficiencia de algoritmos, implementar estructuras de datos', 'Algoritmos y Estructuras de Datos, A. López (2021)'),
+(3, 'BIO2001', 'Unidad Básica', 'Estructura celular, reproducción, metabolismo', 64, 32, 64, 160, 1, 'Ciencias Biológicas', 'Clases teóricas, laboratorios prácticos', NULL, NULL, 'Identificar componentes celulares, describir procesos celulares', 'Biología Celular, M. Ramírez (2019)'),
+(4, 'PHY1001', 'Unidad Básica', 'Mecánica newtoniana, energía, termodinámica', 64, 32, 64, 160, 1, 'Física', 'Clases teóricas, resolución de problemas, laboratorios', NULL, NULL, 'Aplicar leyes de newton, resolver problemas de cinemática', 'Física Universitaria, Young & Freedman (2022)'),
+(5, 'CS2001', 'Unidad Profesional', 'Modelado relacional, SQL, normalización', 64, 32, 64, 160, 3, 'Ciencias de la Computación', 'Clases teóricas, proyectos prácticos', 'CS1001', NULL, 'Diseñar bases de datos, escribir consultas SQL complejas', 'Sistemas de Bases de Datos, R. Elmasri (2021)');
+
+-- 6. Crear los syllabus
+INSERT INTO Syllabus (ID_Syllabus, ID_program, professor_user_id, academic_term, upload_date, document_path, is_active, parallel_code, weekly_class_schedule, weekly_tutoring_schedule, evaluation_midterm, evaluation_formative, evaluation_lab, evaluation_final) VALUES 
+('SYL-CS1001-2023-1', 1, 1, '2023-1', '2023-01-15', '/docs/syllabus/prog1_2023_1.pdf', 'true', 'A', 'Lunes 10-12, Miércoles 8-10', 'Viernes 14-16', 30, 30, 20, 20),
+('SYL-CS1002-2023-1', 2, 1, '2023-1', '2023-01-16', '/docs/syllabus/alg1_2023_1.pdf', 'true', 'A', 'Martes 10-12, Jueves 8-10', 'Lunes 14-16', 40, 20, 0, 40),
+('SYL-BIO2001-2023-1', 3, 2, '2023-1', '2023-01-17', '/docs/syllabus/bioc_2023_1.pdf', 'true', 'A', 'Lunes 8-10, Miércoles 10-12', 'Jueves 14-16', 30, 20, 20, 30),
+('SYL-PHY1001-2023-1', 4, 5, '2023-1', '2023-01-18', '/docs/syllabus/fis1_2023_1.pdf', 'true', 'A', 'Lunes 14-16, Miércoles 16-18', 'Martes 10-12', 35, 15, 20, 30),
+('SYL-CS2001-2023-1', 5, 1, '2023-1', '2023-01-19', '/docs/syllabus/bd1_2023_1.pdf', 'true', 'A', 'Martes 14-16, Jueves 16-18', 'Viernes 10-12', 30, 20, 20, 30);
+
+-- 7. Finalmente, asignar los supervisores a los syllabus
+-- Verificando que los IDs 3 y 4 son supervisores en UserProfile
+INSERT INTO Syllabus_supervisor (supervisor_user_id, ID_Syllabus, signature_id) VALUES 
+(3, 'SYL-CS1001-2023-1', 'CS1001'),
+(3, 'SYL-CS1002-2023-1', 'CS1002'),
+(4, 'SYL-BIO2001-2023-1', 'BIO2001'),
+(4, 'SYL-PHY1001-2023-1', 'PHY1001'),
+(3, 'SYL-CS2001-2023-1', 'CS2001');
+
+
+
+
+
+-- Consultas para verificar la correcta inserción de datos
+
+-- 1. Verificar que los usuarios supervisores existen antes de intentar relacionarlos
+SELECT user_id, name, role 
+FROM UserProfile 
+WHERE role = 'supervisor';
+
+-- 2. Verificar que los IDs de los Syllabus existen antes de referenciarlos
+SELECT ID_Syllabus 
+FROM Syllabus;
+
+-- 3. Verificar que las Signatures existen antes de referenciarlas
+SELECT signature_id, name 
+FROM Signature;
+
+-- 4. Verificar las relaciones entre Syllabus y supervisores
+SELECT 
+    ss.supervisor_user_id,
+    up.name AS supervisor_name,
+    up.role AS supervisor_role,
+    ss.ID_Syllabus,
+    ss.signature_id
+FROM Syllabus_supervisor ss
+JOIN UserProfile up ON ss.supervisor_user_id = up.user_id;
+
+-- 5. Verificar la estructura de cada tabla (útil para identificar problemas de diseño)
+DESCRIBE Login;
+DESCRIBE UserProfile;
+DESCRIBE Classroom;
+DESCRIBE Signature;
+DESCRIBE Program;
+DESCRIBE Syllabus;
+DESCRIBE Syllabus_supervisor;
+
+-- 6. Verificar restricciones CHECK en UserProfile (roles)
+SELECT DISTINCT role FROM UserProfile;
+
+-- 7. Verificar restricciones CHECK en Login (email)
+SELECT email FROM Login WHERE email NOT LIKE '%@yachaytech.edu.ec';
+
+-- 8. Verificar restricciones CHECK en Syllabus (is_active)
+SELECT DISTINCT is_active FROM Syllabus;
+
+-- 9. Verificar restricciones CHECK en Signature (has_lab)
+SELECT DISTINCT has_lab FROM Signature;
+
+-- 10. Verificar la integridad referencial completa
+-- Esta consulta muestra la información completa de un syllabus con todas sus relaciones
+SELECT 
+    s.ID_Syllabus,
+    s.academic_term,
+    s.parallel_code,
+    p.ID_program,
+    sig.signature_id,
+    sig.name AS signature_name,
+    sig.code AS signature_code,
+    prof.user_id AS professor_id,
+    prof.name AS professor_name,
+    cl.classroom_id,
+    cl.name AS classroom_name,
+    sup.user_id AS supervisor_id,
+    sup.name AS supervisor_name
+FROM Syllabus s
+JOIN Program p ON s.ID_program = p.ID_program
+JOIN Signature sig ON p.signature_id = sig.signature_id
+JOIN UserProfile prof ON s.professor_user_id = prof.user_id
+JOIN Classroom cl ON sig.parent_classroom_id = cl.classroom_id
+JOIN Syllabus_supervisor ss ON s.ID_Syllabus = ss.ID_Syllabus
+JOIN UserProfile sup ON ss.supervisor_user_id = sup.user_id
+ORDER BY s.ID_Syllabus;
