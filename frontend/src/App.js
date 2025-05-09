@@ -2,6 +2,8 @@ import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Login from './components/Login';
 import CursoPDF from './components/CursoPdf';
+import CursoProgram from './components/ProgramPdf';
+import VerPrograma from './components/VerPrograma';
 import DashboardInicio from './components/DashboardInicio'; // Asegúrate de crear este archivo
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
@@ -13,6 +15,8 @@ function App() {
         <Route path="/" element={<Login />} />
         <Route path="/dashboard" element={<DashboardInicio />} />
         <Route path="/curso-pdf" element={<CursoPDF />} />
+        <Route path="/curso-programa" element={<CursoProgram />} />
+        <Route path="/ver-programa" element={<VerPrograma />} />
       </Routes>
     </Router>
   );

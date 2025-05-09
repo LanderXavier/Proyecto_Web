@@ -1,0 +1,58 @@
+import React, { useEffect, useState } from 'react';
+import { Table, Container } from 'react-bootstrap';
+import axios from 'axios';
+
+const VerPrograma = () => {
+  const [programas, setProgramas] = useState([]);
+
+  useEffect(() => {
+    const fetchProgramas = async () => {
+      try {
+        const token = localStorage.getItem('token');
+        const response = await axios.get(`${process.env.REACT_APP_API_URL}/program/programs`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        setProgramas(response.data);
+      } catch (error) {
+        console.error('Error al obtener los programas:', error);
+        alert('Error al obtener los programas');
+      }
+    };
+
+    fetchProgramas();
+  }, []);
+
+  return (
+    <Container className="mt-5">
+      <h2 className="text-center mb-4">Lista de Programas</h2>
+      <Table striped bordered hover>
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Syllabus ID</th>
+            <th>Unidad Curricular</th>
+            <th>Horas Totales</th>
+            <th>Semestre</th>
+            <th>Escuela</th>
+          </tr>
+        </thead>
+        <tbody>
+          {programas.map((programa) => (
+            <tr key={programa.ID_program}>
+              <td>{programa.ID_program}</td>
+              <td>{programa.Syllabus_id}</td>
+              <td>{programa.curricular_unit}</td>
+              <td>{programa.total_hours}</td>
+              <td>{programa.semester}</td>
+              <td>{programa.school}</td>
+            </tr>
+          ))}
+        </tbody>
+      </Table>
+    </Container>
+  );
+};
+
+export default VerPrograma;
