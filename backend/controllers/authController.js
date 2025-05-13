@@ -1,56 +1,75 @@
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-const db = require('../models/db');
-const Login = require('../models/Login'); // Importa el modelo Login
+const Login = require('../models/Login');
+const UserProfile = require('../models/UserProfile');
 
-const secretKey = 'key'; // Cambiar a variables de entorno
+const secretKey = process.env.SECRET_KEY || 'key';
 
 exports.register = async (req, res) => {
-    try {
-      // Hashear la contraseña
-      const hashedPassword = await bcrypt.hash(req.body.password, 10);
-  
-      // Crear un nuevo usuario usando Sequelize
-      const user = await Login.create({
-        email: req.body.email,
-        password: hashedPassword,
-      });
-  
-      return res.status(201).json({ message: "Usuario creado correctamente", user });
-    } catch (error) {
-      return res.status(500).json({ message: "Error al registrar usuario", error });
-    }
-  };
+  const { email, password, role, name, school } = req.body;
 
+  try {
+    const hashedPassword = await bcrypt.hash(password, 10);
 
-  exports.login = async (req, res) => {
-    try {
-      const user = await Login.findOne({ where: { email: req.body.email } });
-  
-      if (!user) {
-        return res.status(401).json({ message: "Credenciales incorrectas" });
-      }
-  
-      const isPasswordValid = await bcrypt.compare(req.body.password, user.password);
-      if (isPasswordValid) {
-        const token = jwt.sign({ id: user.id, email: user.email }, secretKey, { expiresIn: '1h' });
-        return res.status(200).json({ token, user: { email: user.email } });
-      } else {
-        return res.status(401).json({ message: "Credenciales incorrectas" });
-      }
-    } catch (error) {
-      console.error("Error en el login:", error);
-      return res.status(500).json({ message: "Error al iniciar sesión", error });
+    const login = await Login.create({ email, password: hashedPassword });
+
+    const userProfile = await UserProfile.create({
+      login_id: login.login_id,
+      role,
+      name,
+      school,
+    });
+
+    return res.status(201).json({ message: 'Usuario registrado correctamente', login, userProfile });
+  } catch (error) {
+    console.error('Error al registrar usuario:', error);
+    return res.status(500).json({ message: 'Error al registrar usuario', error });
+  }
+};
+
+exports.login = async (req, res) => {
+  const { email, password } = req.body;
+
+  try {
+    const login = await Login.findOne({ where: { email }, include: UserProfile });
+
+    if (!login) {
+      return res.status(401).json({ message: 'Credenciales incorrectas' });
     }
-  };
-  exports.getEmails = async (req, res) => {
-    try {
-      const emails = await Login.findAll({
-        attributes: ['email'], // Selecciona solo la columna `email`
-      });
-      return res.status(200).json(emails);
-    } catch (error) {
-      console.error("Error al obtener correos:", error);
-      return res.status(500).json({ message: "Error al obtener correos", error });
+
+    const isPasswordValid = await bcrypt.compare(password, login.password);
+    if (!isPasswordValid) {
+      return res.status(401).json({ message: 'Credenciales incorrectas' });
     }
-  };
+
+    const token = jwt.sign({ id: login.login_id, email: login.email }, secretKey, { expiresIn: '1h' });
+
+    return res.status(200).json({
+      token,
+      user: {
+        email: login.email,
+        role: login.UserProfile.role, // Incluye el rol
+        name: login.UserProfile.name,
+        school: login.UserProfile.school, // Incluye la escuela
+      },
+    });
+  } catch (error) {
+    console.error('Error en el login:', error);
+    return res.status(500).json({ message: 'Error al iniciar sesión', error });
+  }
+};
+
+exports.getEmails = async (req, res) => {
+  try {
+    // Obtener todos los correos electrónicos de la tabla Login
+    const emails = await Login.findAll({
+      attributes: ['email'], // Solo seleccionamos el campo email
+    });
+
+    // Devolver los correos electrónicos en la respuesta
+    return res.status(200).json(emails);
+  } catch (error) {
+    console.error('Error al obtener los correos electrónicos:', error);
+    return res.status(500).json({ message: 'Error al obtener los correos electrónicos', error });
+  }
+};

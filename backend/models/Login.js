@@ -1,23 +1,27 @@
 const { DataTypes } = require('sequelize');
-const sequelize = require('./db'); // Ruta correcta al archivo db.js
+const sequelize = require('./db');
 
 const Login = sequelize.define('Login', {
+  login_id: {
+    type: DataTypes.INTEGER,
+    primaryKey: true, // Clave primaria
+    autoIncrement: true,
+  },
   email: {
-    type: DataTypes.STRING,
+    type: DataTypes.STRING(100),
     allowNull: false,
-    unique: true,
-    primaryKey: true, // Usa `email` como clave primaria
+    unique: true, // Índice único
     validate: {
-      isEmail: true, // Valida que sea un email válido
+      isEmail: true,
     },
   },
   password: {
-    type: DataTypes.STRING,
+    type: DataTypes.STRING(255),
     allowNull: false,
   },
 }, {
-  tableName: 'login', // Nombre de la tabla en la base de datos
-  timestamps: true, // Agrega columnas `createdAt` y `updatedAt`
+  tableName: 'Login',
+  timestamps: true,
 });
 
 module.exports = Login;
