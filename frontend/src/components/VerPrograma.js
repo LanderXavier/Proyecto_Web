@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import { Table, Container } from 'react-bootstrap';
+import { Table, Container, Button } from 'react-bootstrap';
+import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
 const VerPrograma = () => {
   const [programas, setProgramas] = useState([]);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchProgramas = async () => {
@@ -51,6 +53,11 @@ const VerPrograma = () => {
           ))}
         </tbody>
       </Table>
+      <div className="text-center mt-4">
+        <Button variant="secondary" onClick={() => navigate('/dashboard')}>
+          Regresar al Dashboard
+        </Button>
+      </div>
     </Container>
   );
 };

@@ -255,6 +255,9 @@ const Program = () => {
         <Button variant="info" onClick={handleSaveToDatabase}>
           Guardar en la Base de Datos
         </Button>
+        <Button variant="secondary" onClick={() => navigate('/dashboard')} className="ms-3">
+          Regresar al Dashboard
+        </Button>
       </div>
     </Container>
   );

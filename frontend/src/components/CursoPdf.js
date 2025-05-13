@@ -286,6 +286,9 @@ const CursoPdf = () => {
         <Button variant="primary" onClick={handlePreview} className="me-2">
           Previsualizar Formato
         </Button>
+        <Button variant="primary" onClick={() => navigate('/dashboard')}>
+          Regresar al Dashboard
+        </Button>
         {mostrarFormato && (
           <div>
             <Button variant="success" onClick={handleSave}>
@@ -294,6 +297,7 @@ const CursoPdf = () => {
             <Button variant="info" onClick={handleSaveToDatabase}>
               Guardar en la Base de Datos
             </Button>
+
           </div>
         )}
       </div>
