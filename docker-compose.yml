@@ -1,0 +1,61 @@
+# version: '3.8'
+
+services:
+  mysql_db1:
+    image: mysql:8.0
+    container_name: mysql_db1
+    restart: always
+    environment:
+      MYSQL_DATABASE: proyecto
+      MYSQL_USER: root
+      MYSQL_PASSWORD: rootpassword
+      MYSQL_ROOT_PASSWORD: rootpassword
+    
+    ports:
+      - "3306:3306"
+    volumes:
+      - db_data:/var/lib/mysql
+    networks:
+      - app-network
+
+  backend:
+    build: ./backend
+    container_name: node-backend
+    restart: always
+    ports:
+      - "8000:8000"
+    environment:
+      # - SECRET_KEY=tu_clave_secreta
+      - DB_HOST=mysql_db1
+      - DB_PORT=3306        
+      - DB_USER=root
+      - DB_PASSWORD=rootpassword
+      - DB_NAME=proyecto
+      - DEBUG=True
+    depends_on:
+      - mysql_db1
+    command: sh -c "until nc -z mysql_db1 3306; do echo Waiting for MySQL...; sleep 2; done; node server.js"
+    networks:
+      - app-network
+
+  frontend:
+    networks:
+      - app-network
+    build: ./frontend
+    container_name: reactfrontend
+    restart: always
+    ports:
+      - "3000:3000"
+    environment:
+      # - REACT_APP_API_URL=http://node-backend:8000
+      - REACT_APP_API_URL=http://localhost:8000
+
+    depends_on:
+      - backend
+
+volumes:
+  db_data:
+
+networks:
+  app-network:
+    driver: bridge

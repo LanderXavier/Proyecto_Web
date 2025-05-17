@@ -45,7 +45,11 @@ exports.createProgram = async (req, res) => {
 
 exports.getPrograms = async (req, res) => {
   try {
+<<<<<<< HEAD
     const programs = await Program.findAll({//agregar filtros
+=======
+    const programs = await Program.findAll({ //Agregar filtros, sugerencias cambiar el findAll. Tipo escoger la escuela y salga toda la lista de programas
+>>>>>>> b52ee3ff272b6e65bbef3478b6a3457778fe49e7
       attributes: [
         'ID_program',
         'Syllabus_id',
