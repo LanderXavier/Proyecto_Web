@@ -45,7 +45,7 @@ exports.createProgram = async (req, res) => {
 
 exports.getPrograms = async (req, res) => {
   try {
-    const programs = await Program.findAll({
+    const programs = await Program.findAll({//agregar filtros
       attributes: [
         'ID_program',
         'Syllabus_id',

@@ -5,6 +5,9 @@ const sequelize = require('./models/db');
 const Login = require('./models/Login');
 const SyllabusRoutes = require('./routes/SyllabusRoutes');
 const ProgramRoutes = require('./routes/ProgramRoutes');
+const Signature = require('./models/Signature');
+const SignatureRoutes = require('./routes/SignatureRoutes');
+
 
 
 const app = express();
@@ -26,6 +29,8 @@ app.use('/auth', authRoutes); // Esto significa que todas las rutas de authRoute
 app.use('/Syllabus', SyllabusRoutes);
 // Agregar las rutas de Program
 app.use('/Program', ProgramRoutes);
+// Agrefar las rutas de signature
+app.use('/Signature', SignatureRoutes);
 
 
 // Iniciar servidor

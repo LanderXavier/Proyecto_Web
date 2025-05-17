@@ -22,6 +22,9 @@ const Program = () => {
     bibliography: '',
   });
 
+  const [signatures, setSignatures] = useState([]);
+  const [selectedSignature, setSelectedSignature] = useState('');
+
   const navigate = useNavigate();
 
   // Verificar si el token existe
@@ -31,6 +34,39 @@ const Program = () => {
       navigate('/');
     }
   }, [navigate]);
+
+  useEffect(() => {
+    const fetchSignatures = async () => {
+      try {
+        const response = await axios.get(
+          `${process.env.REACT_APP_API_URL}/Signature/signatures`
+        );
+        setSignatures(response.data);
+      } catch (error) {
+        console.error('Error fetching signatures:', error);
+        alert('Error fetching signatures');
+      }
+    };
+
+    fetchSignatures();
+  }, []);
+
+  useEffect(() => {
+    if (selectedSignature && signatures.length > 0) {
+      const found = signatures.find((s) => s.id === parseInt(selectedSignature));
+      if (found) {
+        setProgram((prev) => ({
+          ...prev,
+          curricular_unit: found.curricular_unit || '',
+          content: found.content || '',
+          total_hours: found.total_hours || '',
+          semester: found.semester || '',
+          school: found.school || '',
+          learning_outcomes: found.learning_outcomes || '',
+        }));
+      }
+    }
+  }, [selectedSignature, signatures]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -43,6 +79,11 @@ const Program = () => {
   const handleSaveToDatabase = async () => {
     try {
       const token = localStorage.getItem('token');
+
+      if (!selectedSignature) {
+        alert('Por favor, selecciona una asignatura.');
+        return;
+      }
 
       // Validar que los campos requeridos no estén vacíos
       if (
@@ -67,6 +108,7 @@ const Program = () => {
         `${process.env.REACT_APP_API_URL}/program/create`,
         {
           ...program,
+          signatureId: selectedSignature,
         },
         {
           headers: {
@@ -91,6 +133,7 @@ const Program = () => {
         learning_outcomes: '',
         bibliography: '',
       });
+      setSelectedSignature('');
     } catch (error) {
       console.error('Error al guardar en la base de datos:', error);
       alert('Error al guardar en la base de datos');
@@ -104,6 +147,22 @@ const Program = () => {
       <Card className="mb-4">
         <Card.Body>
           <Form>
+            <Form.Group className="mb-3">
+              <Form.Label>Seleccionar Asignatura</Form.Label>
+              <Form.Select
+                value={selectedSignature}
+                onChange={(e) => setSelectedSignature(e.target.value)}
+                required
+              >
+                <option value="">Selecciona una asignatura</option>
+                {signatures.map((signature) => (
+                  <option key={signature.id} value={signature.id}>
+                    {signature.curricular_unit}
+                  </option>
+                ))}
+              </Form.Select>
+            </Form.Group>
+
             <Form.Group className="mb-3">
               <Form.Label>Syllabus ID</Form.Label>
               <Form.Control
@@ -255,7 +314,11 @@ const Program = () => {
         <Button variant="info" onClick={handleSaveToDatabase}>
           Guardar en la Base de Datos
         </Button>
-        <Button variant="secondary" onClick={() => navigate('/dashboard')} className="ms-3">
+        <Button
+          variant="secondary"
+          onClick={() => navigate('/dashboard')}
+          className="ms-3"
+        >
           Regresar al Dashboard
         </Button>
       </div>

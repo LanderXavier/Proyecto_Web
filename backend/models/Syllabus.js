@@ -1,8 +1,7 @@
 const { DataTypes } = require('sequelize');
 const sequelize = require('./db');
 const Program = require('./Program');
-
-
+//a;adir campos copiados del programa ya que se puede cambiar
 const Syllabus = sequelize.define('Syllabus', {
   ID_Syllabus: {
     type: DataTypes.STRING,
@@ -12,6 +11,7 @@ const Syllabus = sequelize.define('Syllabus', {
     type: DataTypes.INTEGER,
     allowNull: false,
   },
+  //lista de profersores y añadir supervisor
   professor_user_id: {
     type: DataTypes.INTEGER,
     allowNull: false,
