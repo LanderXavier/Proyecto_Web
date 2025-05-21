@@ -5,7 +5,7 @@ const sequelize = require('./models/db');
 const Login = require('./models/Login');
 const SyllabusRoutes = require('./routes/SyllabusRoutes');
 const ProgramRoutes = require('./routes/ProgramRoutes');
-const Signature = require('./models/Signature');
+const Signature = require('./models/signature');
 const SignatureRoutes = require('./routes/SignatureRoutes');
 
 
@@ -34,10 +34,6 @@ app.use('/Signature', SignatureRoutes);
 
 
 // Iniciar servidor
-// app.listen(8081, () => {
-//   console.log('Server is running on port 8081');
-// });
-
-app.listen(8000, '0.0.0.0', () => {
-  console.log('Server is running on port 8000');
+app.listen(8081, () => {
+  console.log('Server is running on port 8081');
 });

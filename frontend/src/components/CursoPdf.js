@@ -61,12 +61,14 @@ const CursoPdf = () => {
   // Auto completar los campos basados en el programa seleccionado
   useEffect(() => {
     if (curso.ID_program) {
-      const selectedProgram = programData.find((program) => program.ID_program === parseInt(curso.ID_program));
+      const selectedProgram = programData.find(
+        (program) => program.ID_program === parseInt(curso.ID_program)
+      );
       if (selectedProgram) {
         setCurso((prevCurso) => ({
           ...prevCurso,
           nombre: selectedProgram.curricular_unit,
-          codigo: selectedProgram.Syllabus_id,
+          codigo: selectedProgram.ID_program, // <-- Aquí usa el ID_program
           semestre: selectedProgram.semester,
           descripcion: selectedProgram.content,
           totalHoras: selectedProgram.total_hours,

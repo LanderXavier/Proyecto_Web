@@ -6,7 +6,6 @@ import axios from 'axios';
 
 const Program = () => {
   const [program, setProgram] = useState({
-    Syllabus_id: '',
     curricular_unit: '',
     content: '',
     teaching_hours: '',
@@ -87,7 +86,6 @@ const Program = () => {
 
       // Validar que los campos requeridos no estén vacíos
       if (
-        !program.Syllabus_id ||
         !program.curricular_unit ||
         !program.content ||
         !program.teaching_hours ||
@@ -108,7 +106,7 @@ const Program = () => {
         `${process.env.REACT_APP_API_URL}/program/create`,
         {
           ...program,
-          signatureId: selectedSignature,
+          signature_id: selectedSignature,
         },
         {
           headers: {
@@ -118,7 +116,6 @@ const Program = () => {
       );
       alert(response.data.message);
       setProgram({
-        Syllabus_id: '',
         curricular_unit: '',
         content: '',
         teaching_hours: '',
@@ -163,15 +160,7 @@ const Program = () => {
               </Form.Select>
             </Form.Group>
 
-            <Form.Group className="mb-3">
-              <Form.Label>Syllabus ID</Form.Label>
-              <Form.Control
-                type="text"
-                name="Syllabus_id"
-                value={program.Syllabus_id}
-                onChange={handleChange}
-              />
-            </Form.Group>
+            {/* Campo Syllabus_id eliminado */}
 
             <Form.Group className="mb-3">
               <Form.Label>Unidad Curricular</Form.Label>

@@ -2,6 +2,11 @@ const { DataTypes } = require('sequelize');
 const sequelize = require('./db');
 
 const Signature = sequelize.define('Signature', {
+  id: {
+    type: DataTypes.INTEGER,
+    primaryKey: true,
+    autoIncrement: true,
+  },
   curricular_unit: {
     type: DataTypes.STRING,
     allowNull: false,
