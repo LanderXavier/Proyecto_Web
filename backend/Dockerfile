@@ -5,7 +5,7 @@ WORKDIR /backend
 COPY package*.json ./
 RUN npm install
 
-# Instala netcat-openbsd para el script de espera
+# Instala netcat para el script de espera
 RUN apt-get update && apt-get install -y netcat-openbsd
 
 COPY . .

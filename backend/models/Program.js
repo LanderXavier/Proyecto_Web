@@ -1,5 +1,6 @@
 const { DataTypes } = require('sequelize');
 const sequelize = require('./db');
+const Signature = require('./signature');
 
 const Program = sequelize.define('Program', {
   ID_program: {
@@ -7,13 +8,18 @@ const Program = sequelize.define('Program', {
     primaryKey: true,
     autoIncrement: true,
   },
-  Syllabus_id: {
-    type: DataTypes.STRING,
+  signature_id: {
+    type: DataTypes.INTEGER,
     allowNull: false,
+    references: {
+      model: Signature,
+      key: 'id',
+    },
   },
   curricular_unit: {
     type: DataTypes.STRING,
     allowNull: false,
+    
   },
   content: {
     type: DataTypes.TEXT,
@@ -67,5 +73,9 @@ const Program = sequelize.define('Program', {
   tableName: 'Program', // Nombre de la tabla en la base de datos
   timestamps: false, // Si no necesitas columnas `createdAt` y `updatedAt`
 });
+
+// Relaciones Sequelize
+Program.belongsTo(Signature, { foreignKey: 'signature_id' });
+Signature.hasMany(Program, { foreignKey: 'signature_id' });
 
 module.exports = Program;

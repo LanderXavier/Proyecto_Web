@@ -2,71 +2,33 @@ const { DataTypes } = require('sequelize');
 const sequelize = require('./db');
 const Program = require('./Program');
 
-
 const Syllabus = sequelize.define('Syllabus', {
-  ID_Syllabus: {
-    type: DataTypes.STRING,
+  syllabus_id: {
+    type: DataTypes.INTEGER,
     primaryKey: true,
+    autoIncrement: true,
   },
   ID_program: {
     type: DataTypes.INTEGER,
     allowNull: false,
-  },
-  professor_user_id: {
-    type: DataTypes.INTEGER,
-    allowNull: false,
-  },
-  academic_term: {
-    type: DataTypes.STRING,
-    allowNull: false,
-  },
-  upload_date: {
-    type: DataTypes.STRING,
-    allowNull: false,
-  },
-  document_path: {
-    type: DataTypes.STRING,
-    allowNull: false,
-  },
-  is_active: {
-    type: DataTypes.STRING,
-    allowNull: false,
-    validate: {
-      isIn: [['true', 'false']],
+    references: {
+      model: Program,
+      key: 'ID_program',
     },
   },
-  parallel_code: {
+  // Otros campos específicos del syllabus
+  syllabus_name: {
     type: DataTypes.STRING,
     allowNull: false,
   },
-  weekly_class_schedule: {
-    type: DataTypes.TEXT,
-    allowNull: false,
-  },
-  weekly_tutoring_schedule: {
-    type: DataTypes.TEXT,
-    allowNull: false,
-  },
-  evaluation_midterm: {
-    type: DataTypes.FLOAT,
-    allowNull: false,
-  },
-  evaluation_formative: {
-    type: DataTypes.FLOAT,
-    allowNull: false,
-  },
-  evaluation_lab: {
-    type: DataTypes.FLOAT,
-    allowNull: true,  // Puede ser nulo
-  },
-  evaluation_final: {
-    type: DataTypes.FLOAT,
-    allowNull: false,
-  },
+  // Agrega aquí otros campos necesarios
 }, {
   tableName: 'Syllabus',
   timestamps: false,
-  
 });
+
+// Relaciones Sequelize
 Syllabus.belongsTo(Program, { foreignKey: 'ID_program' });
+Program.hasMany(Syllabus, { foreignKey: 'ID_program' });
+
 module.exports = Syllabus;

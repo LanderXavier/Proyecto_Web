@@ -4,15 +4,20 @@ const sequelize = require('./db');
 const Login = sequelize.define('Login', {
   login_id: {
     type: DataTypes.INTEGER,
-    primaryKey: true, // Clave primaria
+    primaryKey: true,
     autoIncrement: true,
   },
   email: {
     type: DataTypes.STRING(100),
     allowNull: false,
-    unique: true, // Índice único
+    unique: true,
     validate: {
       isEmail: true,
+      isYachayEmail(value) {
+        if (!value.endsWith('@yachaytech.edu.ec')) {
+          throw new Error('El correo debe pertenecer al dominio @yachaytech.edu.ec');
+        }
+      },
     },
   },
   password: {

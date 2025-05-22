@@ -6,7 +6,6 @@ import axios from 'axios';
 
 const Program = () => {
   const [program, setProgram] = useState({
-    Syllabus_id: '',
     curricular_unit: '',
     content: '',
     teaching_hours: '',
@@ -27,6 +26,9 @@ const Program = () => {
     contribution: '',
   });
 
+  const [signatures, setSignatures] = useState([]);
+  const [selectedSignature, setSelectedSignature] = useState('');
+
   const [activeTab, setActiveTab] = useState('general');
   const navigate = useNavigate();
 
@@ -37,6 +39,39 @@ const Program = () => {
       navigate('/');
     }
   }, [navigate]);
+
+  useEffect(() => {
+    const fetchSignatures = async () => {
+      try {
+        const response = await axios.get(
+          `${process.env.REACT_APP_API_URL}/Signature/signatures`
+        );
+        setSignatures(response.data);
+      } catch (error) {
+        console.error('Error fetching signatures:', error);
+        alert('Error fetching signatures');
+      }
+    };
+
+    fetchSignatures();
+  }, []);
+
+  useEffect(() => {
+    if (selectedSignature && signatures.length > 0) {
+      const found = signatures.find((s) => s.id === parseInt(selectedSignature));
+      if (found) {
+        setProgram((prev) => ({
+          ...prev,
+          curricular_unit: found.curricular_unit || '',
+          content: found.content || '',
+          total_hours: found.total_hours || '',
+          semester: found.semester || '',
+          school: found.school || '',
+          learning_outcomes: found.learning_outcomes || '',
+        }));
+      }
+    }
+  }, [selectedSignature, signatures]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -50,9 +85,13 @@ const Program = () => {
     try {
       const token = localStorage.getItem('token');
 
+      if (!selectedSignature) {
+        alert('Por favor, selecciona una asignatura.');
+        return;
+      }
+
       // Validar que los campos requeridos no estén vacíos
       if (
-        !program.Syllabus_id ||
         !program.curricular_unit ||
         !program.content ||
         !program.teaching_hours ||
@@ -73,6 +112,7 @@ const Program = () => {
         `${process.env.REACT_APP_API_URL}/program/create`,
         {
           ...program,
+          signature_id: selectedSignature,
         },
         {
           headers: {
@@ -82,7 +122,6 @@ const Program = () => {
       );
       alert(response.data.message);
       setProgram({
-        Syllabus_id: '',
         curricular_unit: '',
         content: '',
         teaching_hours: '',
@@ -102,6 +141,7 @@ const Program = () => {
         study_mode: '',
         contribution: '',
       });
+      setSelectedSignature('');
     } catch (error) {
       console.error('Error al guardar en la base de datos:', error);
       alert('Error al guardar en la base de datos');
@@ -113,131 +153,26 @@ const Program = () => {
       <h1 className="text-center mb-4">Formulario de Programa</h1>
       <Card className="mb-4">
         <Card.Body>
-          <Tabs
-            id="program-tabs"
-            activeKey={activeTab}
-            onSelect={(k) => setActiveTab(k)}
-            className="mb-3"
-            justify
-          >
-            <Tab eventKey="general" title="1. Información General">
-              <Form.Group className="mb-3">
-                <Form.Label>Escuela</Form.Label>
-                <Form.Control
-                  type="text"
-                  name="school"
-                  value={program.school}
-                  onChange={handleChange}
-                />
-              </Form.Group>
-              <Form.Group className="mb-3">
-                <Form.Label>Carrera/Mención</Form.Label>
-                <Form.Control
-                  type="text"
-                  name="major"
-                  value={program.major || ''}
-                  onChange={handleChange}
-                  placeholder="Ej: Computer Science Engineering"
-                />
-              </Form.Group>
-              <Form.Group className="mb-3">
-                <Form.Label>Curso</Form.Label>
-                <Form.Control
-                  type="text"
-                  name="course"
-                  value={program.course || ''}
-                  onChange={handleChange}
-                  placeholder="Ej: Web Applications"
-                />
-              </Form.Group>
-              <Form.Group className="mb-3">
-                <Form.Label>Código</Form.Label>
-                <Form.Control
-                  type="text"
-                  name="code"
-                  value={program.code || ''}
-                  onChange={handleChange}
-                  placeholder="Ej: ECMC-COM-1117"
-                />
-              </Form.Group>
-              <Form.Group className="mb-3">
-                <Form.Label>Unidad Curricular</Form.Label>
-                <Form.Control
-                  type="text"
-                  name="curricular_unit"
-                  value={program.curricular_unit}
-                  onChange={handleChange}
-                  placeholder="Ej: Professional"
-                />
-              </Form.Group>
-              <Form.Group className="mb-3">
-                <Form.Label>Modalidad de Estudio</Form.Label>
-                <Form.Control
-                  type="text"
-                  name="study_mode"
-                  value={program.study_mode || ''}
-                  onChange={handleChange}
-                  placeholder="Ej: In person"
-                />
-              </Form.Group>
-              <Form.Group className="mb-3">
-                <Form.Label>Total de Horas</Form.Label>
-                <Form.Control
-                  type="number"
-                  name="total_hours"
-                  value={program.total_hours}
-                  onChange={handleChange}
-                />
-              </Form.Group>
-              <Form.Group className="mb-3">
-                <Form.Label>Semestre</Form.Label>
-                <Form.Control
-                  type="number"
-                  name="semester"
-                  value={program.semester}
-                  onChange={handleChange}
-                />
-              </Form.Group>
-            </Tab>
+          <Form>
+            <Form.Group className="mb-3">
+              <Form.Label>Syllabus ID</Form.Label>
+              <Form.Control
+                type="text"
+                name="Syllabus_id"
+                value={program.Syllabus_id}
+                onChange={handleChange}
+              />
+            </Form.Group>
 
-
-            <Tab eventKey="prereq" title="2. Prerrequisitos y Correquisitos">
-              <Form.Group className="mb-3">
-                <Form.Label>Course: Prerrequisitos</Form.Label>
-                <Form.Control
-                  type="text"
-                  name="course"
-                  value={program.course || ''}
-                  onChange={handleChange}
-                />
-              </Form.Group>
-              <Form.Group className="mb-3">
-                <Form.Label>Código</Form.Label>
-                <Form.Control
-                  type="text"
-                  name="code"
-                  value={program.code || ''}
-                  onChange={handleChange}
-                />
-              </Form.Group>
-              <Form.Group className="mb-3">
-                <Form.Label>Course: Correquisitos</Form.Label>
-                <Form.Control
-                  type="text"
-                  name="course"
-                  value={program.prerequisites || ''}
-                  onChange={handleChange}
-                />
-              </Form.Group>
-              <Form.Group className="mb-3">
-                <Form.Label>Código</Form.Label>
-                <Form.Control
-                  type="text"
-                  name="code"
-                  value={program.corequisites || ''}
-                  onChange={handleChange}
-                />
-              </Form.Group>
+            <Form.Group className="mb-3">
+              <Form.Label>Unidad Curricular</Form.Label>
+              <Form.Control
+                type="text"
+                name="curricular_unit"
+                value={program.curricular_unit}
+                onChange={handleChange}
+              />
+            </Form.Group>
 
             </Tab>
 
@@ -337,7 +272,11 @@ const Program = () => {
         <Button variant="info" onClick={handleSaveToDatabase}>
           Guardar en la Base de Datos
         </Button>
-        <Button variant="secondary" onClick={() => navigate('/dashboard')} className="ms-3">
+        <Button
+          variant="secondary"
+          onClick={() => navigate('/dashboard')}
+          className="ms-3"
+        >
           Regresar al Dashboard
         </Button>
       </div>

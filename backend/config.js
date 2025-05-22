@@ -3,7 +3,7 @@ require('dotenv').config(); // Carga las variables de entorno desde el archivo .
 
 const config = {
   database: {
-    host: process.env.DB_HOST || 'mysqldb_1',
+    host: process.env.DB_HOST || 'localhost',
     dialect: 'mysql',
     port: process.env.DB_PORT || 3306,
     user: process.env.DB_USER || 'root',
