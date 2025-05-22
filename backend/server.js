@@ -7,6 +7,8 @@ const SyllabusRoutes = require('./routes/SyllabusRoutes');
 const ProgramRoutes = require('./routes/ProgramRoutes');
 const Signature = require('./models/signature');
 const SignatureRoutes = require('./routes/SignatureRoutes');
+const SchoolRoutes = require('./routes/SchoolRoutes');
+
 
 
 
@@ -31,6 +33,9 @@ app.use('/Syllabus', SyllabusRoutes);
 app.use('/Program', ProgramRoutes);
 // Agrefar las rutas de signature
 app.use('/Signature', SignatureRoutes);
+// Agregar las rutas de School
+app.use('/School', SchoolRoutes);
+
 
 
 // Iniciar servidor

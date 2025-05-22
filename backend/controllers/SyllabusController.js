@@ -4,40 +4,35 @@ exports.createSyllabus = async (req, res) => {
   try {
     const {
       ID_program, // foreign key
-      professor_user_id,
-      academic_term,
-      upload_date,
-      document_path,
-      is_active,
-      parallel_code,
-      weekly_class_schedule,
-      weekly_tutoring_schedule,
-      evaluation_midterm,
-      evaluation_formative,
-      evaluation_lab,
-      evaluation_final
+      syllabus_name,
+      objetivos,
+      temas,
+      bibliografia
     } = req.body;
 
     // Crear un nuevo registro en la tabla `Syllabus`
-    const newSyllabus = await Syllabus.create({
+    const createdSyllabus = await Syllabus.create({
       ID_program,
-      professor_user_id,
-      academic_term,
-      upload_date,
-      document_path,
-      is_active,
-      parallel_code,
-      weekly_class_schedule,
-      weekly_tutoring_schedule,
-      evaluation_midterm,
-      evaluation_formative,
-      evaluation_lab,
-      evaluation_final
+      syllabus_name,
+      objetivos,
+      temas,
+      bibliografia
     });
 
-    return res.status(201).json({ message: 'Syllabus creada correctamente', Syllabus: newSyllabus });
+    return res.status(201).json({ message: 'Syllabus creada correctamente', Syllabus: createdSyllabus });
   } catch (error) {
     console.error('Error al crear la Syllabus:', error);
     return res.status(500).json({ message: 'Error al crear la Syllabus', error });
   }
 };
+
+exports.getAllSyllabus = async (req, res) => {
+  try {
+    const syllabusList = await Syllabus.findAll();
+    return res.status(200).json(syllabusList);
+  } catch (error) {
+    console.error('Error al obtener los syllabus:', error);
+    return res.status(500).json({ message: 'Error al obtener los syllabus', error });
+  }
+};
+

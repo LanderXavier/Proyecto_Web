@@ -59,17 +59,17 @@ exports.login = async (req, res) => {
   }
 };
 
-exports.getEmails = async (req, res) => {
-  try {
-    // Obtener todos los correos electrónicos de la tabla Login
-    const emails = await Login.findAll({
-      attributes: ['email'], // Solo seleccionamos el campo email
-    });
+// exports.getEmails = async (req, res) => {
+// try {
+//   // Obtener todos los correos electrónicos de la tabla Login
+//   const emails = await Login.findAll({
+//     attributes: ['email'], // Solo seleccionamos el campo email
+//   });
 
-    // Devolver los correos electrónicos en la respuesta
-    return res.status(200).json(emails);
-  } catch (error) {
-    console.error('Error al obtener los correos electrónicos:', error);
-    return res.status(500).json({ message: 'Error al obtener los correos electrónicos', error });
-  }
-};
+//   // Devolver los correos electrónicos en la respuesta
+//   return res.status(200).json(emails);
+// } catch (error) {
+//   console.error('Error al obtener los correos electrónicos:', error);
+//   return res.status(500).json({ message: 'Error al obtener los correos electrónicos', error });
+// }
+// };

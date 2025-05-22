@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 const API_URL = process.env.REACT_APP_API_URL;
@@ -15,6 +15,7 @@ function Login() {
   const [registroName, setRegistroName] = useState('');
   const [registroSchool, setRegistroSchool] = useState('');
   const [registroMensaje, setRegistroMensaje] = useState('');
+  const [schoolOptions, setSchoolOptions] = useState([]);
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
@@ -57,6 +58,19 @@ function Login() {
       setRegistroMensaje('Error al registrar el usuario');
     }
   };
+
+  useEffect(() => {
+    // Obtener escuelas desde el backend
+    const fetchSchools = async () => {
+      try {
+        const response = await axios.get(`${API_URL}/School/schools`);
+        setSchoolOptions(response.data);
+      } catch (err) {
+        setSchoolOptions([]);
+      }
+    };
+    fetchSchools();
+  }, []);
 
   return (
     <div className="card p-4 shadow w-50 mx-auto mt-5">
@@ -178,12 +192,9 @@ function Login() {
                   required
                 >
                   <option value="">Seleccione una escuela</option>
-                  <option value="Escuela de Ciencias Matematicas y Computacionales">Escuela de Ciencias Matemáticas y Computacionales</option> 
-                  <option value="Escuela de Ciencias Biologicas e Ingenieria">Escuela de Ciencias Biológicas e Ingeniería</option>
-                  <option value="Escuela de Ciencias Fisicas y Nanotecnologia">Escuela de Ciencias Físicas y Nanotecnología</option>
-                  <option value="scuela de Ciencias de la Tierra, Energia y Ambiente">Escuela de Ciencias de la Tierra, Energía y Ambiente</option>
-                  <option value="Escuela de Ciencias Químicas e Ingenieria">Escuela de Ciencias Químicas e Ingeniería</option>
-                  <option value="Escuela de Ciencias Agropecuarias y Agroindustriales">Escuela de Ciencias Agropecuarias y Agroindustriales</option>
+                  {schoolOptions.map((school) => (
+                    <option key={school.id_school} value={school.school}>{school.school}</option>
+                  ))}
                 </select>
               </div>
 

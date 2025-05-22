@@ -16,12 +16,24 @@ const Syllabus = sequelize.define('Syllabus', {
       key: 'ID_program',
     },
   },
-  // Otros campos específicos del syllabus
+  // Solo campos exclusivos de Syllabus
   syllabus_name: {
     type: DataTypes.STRING,
     allowNull: false,
   },
-  // Agrega aquí otros campos necesarios
+  objetivos: {
+    type: DataTypes.TEXT,
+    allowNull: true,
+  },
+  temas: {
+    type: DataTypes.TEXT,
+    allowNull: true,
+  },
+  bibliografia: {
+    type: DataTypes.TEXT,
+    allowNull: true,
+  }
+  // Si necesitas más campos exclusivos de Syllabus, agrégalos aquí
 }, {
   tableName: 'Syllabus',
   timestamps: false,

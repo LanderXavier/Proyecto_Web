@@ -96,9 +96,11 @@ const CursoPdf = () => {
         `${process.env.REACT_APP_API_URL}/Syllabus/create`,
         {
           ID_program: curso.ID_program, // Enviar el ID del programa
-          name: curso.nombre,
-          code: curso.codigo,
-          // Otros campos necesarios para el syllabus...
+          syllabus_name: curso.nombre,  // <-- Cambia 'name' por 'syllabus_name'
+          objetivos: curso.objetivos,
+          temas: curso.temas,
+          bibliografia: curso.bibliografia,
+          // Si tienes más campos exclusivos de Syllabus, agrégalos aquí
         },
         {
           headers: {
