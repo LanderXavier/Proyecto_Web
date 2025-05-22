@@ -26,10 +26,9 @@ const Program = () => {
     contribution: '',
   });
 
+  const [activeTab, setActiveTab] = useState('general');
   const [signatures, setSignatures] = useState([]);
   const [selectedSignature, setSelectedSignature] = useState('');
-
-  const [activeTab, setActiveTab] = useState('general');
   const navigate = useNavigate();
 
   // Verificar si el token existe
@@ -153,32 +152,145 @@ const Program = () => {
       <h1 className="text-center mb-4">Formulario de Programa</h1>
       <Card className="mb-4">
         <Card.Body>
-          <Form>
-            <Form.Group className="mb-3">
-              <Form.Label>Syllabus ID</Form.Label>
-              <Form.Control
-                type="text"
-                name="Syllabus_id"
-                value={program.Syllabus_id}
-                onChange={handleChange}
-              />
-            </Form.Group>
-
-            <Form.Group className="mb-3">
-              <Form.Label>Unidad Curricular</Form.Label>
-              <Form.Control
-                type="text"
-                name="curricular_unit"
-                value={program.curricular_unit}
-                onChange={handleChange}
-              />
-            </Form.Group>
-
+          <Tabs
+            id="program-tabs"
+            activeKey={activeTab}
+            onSelect={(k) => setActiveTab(k)}
+            className="mb-3"
+            justify
+          >
+            <Tab eventKey="general" title="1. Información General">
+              <Form.Group className="mb-3">
+                <Form.Label>Escuela</Form.Label>
+                <Form.Control
+                  type="text"
+                  name="school"
+                  value={program.school}
+                  onChange={handleChange}
+                />
+              </Form.Group>
+              <Form.Group className="mb-3">
+                <Form.Label>Carrera/Mención</Form.Label>
+                <Form.Control
+                  type="text"
+                  name="major"
+                  value={program.major || ''}
+                  onChange={handleChange}
+                  placeholder="Ej: Computer Science Engineering"
+                />
+              </Form.Group>
+              <Form.Group className="mb-3">
+                <Form.Label>Curso</Form.Label>
+                <Form.Control
+                  type="text"
+                  name="course"
+                  value={program.course || ''}
+                  onChange={handleChange}
+                  placeholder="Ej: Web Applications"
+                />
+              </Form.Group>
+              <Form.Group className="mb-3">
+                <Form.Label>Código</Form.Label>
+                <Form.Control
+                  type="text"
+                  name="code"
+                  value={program.code || ''}
+                  onChange={handleChange}
+                  placeholder="Ej: ECMC-COM-1117"
+                />
+              </Form.Group>
+              <Form.Group className="mb-3">
+                <Form.Label>Unidad Curricular</Form.Label>
+                <Form.Control
+                  type="text"
+                  name="curricular_unit"
+                  value={program.curricular_unit}
+                  onChange={handleChange}
+                  placeholder="Ej: Professional"
+                />
+              </Form.Group>
+              <Form.Group className="mb-3">
+                <Form.Label>Modalidad de Estudio</Form.Label>
+                <Form.Control
+                  type="text"
+                  name="study_mode"
+                  value={program.study_mode || ''}
+                  onChange={handleChange}
+                  placeholder="Ej: In person"
+                />
+              </Form.Group>
+              <Form.Group className="mb-3">
+                <Form.Label>Total de Horas</Form.Label>
+                <Form.Control
+                  type="number"
+                  name="total_hours"
+                  value={program.total_hours}
+                  onChange={handleChange}
+                />
+              </Form.Group>
+              <Form.Group className="mb-3">
+                <Form.Label>Semestre</Form.Label>
+                <Form.Control
+                  type="number"
+                  name="semester"
+                  value={program.semester}
+                  onChange={handleChange}
+                />
+              </Form.Group>
+              <Form.Group className="mb-3">
+                <Form.Label>Asignatura</Form.Label>
+                <Form.Select
+                  value={selectedSignature}
+                  onChange={(e) => setSelectedSignature(e.target.value)}
+                >
+                  <option value="">Selecciona una asignatura</option>
+                  {signatures.map((sig) => (
+                    <option key={sig.id} value={sig.id}>
+                      {sig.curricular_unit}
+                    </option>
+                  ))}
+                </Form.Select>
+              </Form.Group>
             </Tab>
 
-
-
-
+            <Tab eventKey="prereq" title="2. Prerrequisitos y Correquisitos">
+              <Form.Group className="mb-3">
+                <Form.Label>Course: Prerrequisitos</Form.Label>
+                <Form.Control
+                  type="text"
+                  name="course"
+                  value={program.course || ''}
+                  onChange={handleChange}
+                />
+              </Form.Group>
+              <Form.Group className="mb-3">
+                <Form.Label>Código</Form.Label>
+                <Form.Control
+                  type="text"
+                  name="code"
+                  value={program.code || ''}
+                  onChange={handleChange}
+                />
+              </Form.Group>
+              <Form.Group className="mb-3">
+                <Form.Label>Course: Correquisitos</Form.Label>
+                <Form.Control
+                  type="text"
+                  name="course"
+                  value={program.prerequisites || ''}
+                  onChange={handleChange}
+                />
+              </Form.Group>
+              <Form.Group className="mb-3">
+                <Form.Label>Código</Form.Label>
+                <Form.Control
+                  type="text"
+                  name="code"
+                  value={program.corequisites || ''}
+                  onChange={handleChange}
+                />
+              </Form.Group>
+            </Tab>
 
             <Tab eventKey="description" title="3. Descripción del Curso">
               <Form.Group className="mb-3">
