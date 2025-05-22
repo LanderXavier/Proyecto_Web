@@ -5,7 +5,6 @@ const authController = require('../controllers/authController');
 // agregar un change password
 router.post('/register', authController.register);
 router.post('/login', authController.login);
-//verificar**
 router.get('/emails', authController.getEmails); // Nueva ruta para obtener correos
 
 module.exports = router;
