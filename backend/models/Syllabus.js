@@ -33,7 +33,6 @@ const Syllabus = sequelize.define('Syllabus', {
     type: DataTypes.TEXT,
     allowNull: true,
   }
-  // Si necesitas más campos exclusivos de Syllabus, agrégalos aquí
 }, {
   tableName: 'Syllabus',
   timestamps: false,

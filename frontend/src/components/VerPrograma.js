@@ -5,6 +5,7 @@ import axios from 'axios';
 
 const VerPrograma = () => {
   const [programas, setProgramas] = useState([]);
+  const [searchTerm, setSearchTerm] = useState('');
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -26,14 +27,35 @@ const VerPrograma = () => {
     fetchProgramas();
   }, []);
 
+  const filteredProgramas = programas.filter((programa) => {
+    const term = searchTerm.toLowerCase();
+    return (
+      programa.ID_program?.toString().toLowerCase().includes(term) ||
+      (programa.Syllabus_id?.toString().toLowerCase().includes(term)) ||
+      (programa.curricular_unit?.toLowerCase().includes(term)) ||
+      (programa.total_hours?.toString().toLowerCase().includes(term)) ||
+      (programa.semester?.toString().toLowerCase().includes(term)) ||
+      (programa.school?.toLowerCase().includes(term))
+    );
+  });
+
   return (
     <Container className="mt-5">
       <h2 className="text-center mb-4">Lista de Programas</h2>
+      <div className="mb-3 text-end">
+        <input
+          type="text"
+          className="form-control w-auto d-inline"
+          placeholder="Buscar por palabra o ID"
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+        />
+      </div>
       <Table striped bordered hover>
         <thead>
           <tr>
             <th>ID</th>
-            <th>Syllabus ID</th>
+            {/* <th>Syllabus ID</th> */}
             <th>Unidad Curricular</th>
             <th>Horas Totales</th>
             <th>Semestre</th>
@@ -41,10 +63,10 @@ const VerPrograma = () => {
           </tr>
         </thead>
         <tbody>
-          {programas.map((programa) => (
+          {filteredProgramas.map((programa) => (
             <tr key={programa.ID_program}>
               <td>{programa.ID_program}</td>
-              <td>{programa.Syllabus_id}</td>
+              {/* <td>{programa.Syllabus_id}</td> */}
               <td>{programa.curricular_unit}</td>
               <td>{programa.total_hours}</td>
               <td>{programa.semester}</td>

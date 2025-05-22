@@ -141,6 +141,7 @@ const Program = () => {
         contribution: '',
       });
       setSelectedSignature('');
+      navigate('/dashboard'); // Redirige al dashboard después de guardar
     } catch (error) {
       console.error('Error al guardar en la base de datos:', error);
       alert('Error al guardar en la base de datos');
@@ -161,6 +162,20 @@ const Program = () => {
           >
             <Tab eventKey="general" title="1. Información General">
               <Form.Group className="mb-3">
+                <Form.Label>Asignatura</Form.Label>
+                <Form.Select
+                  value={selectedSignature}
+                  onChange={(e) => setSelectedSignature(e.target.value)}
+                >
+                  <option value="">Selecciona una asignatura</option>
+                  {signatures.map((sig) => (
+                    <option key={sig.id} value={sig.id}>
+                      {sig.curricular_unit}
+                    </option>
+                  ))}
+                </Form.Select>
+              </Form.Group>
+              <Form.Group className="mb-3">
                 <Form.Label>Escuela</Form.Label>
                 <Form.Control
                   type="text"
@@ -177,16 +192,6 @@ const Program = () => {
                   value={program.major || ''}
                   onChange={handleChange}
                   placeholder="Ej: Computer Science Engineering"
-                />
-              </Form.Group>
-              <Form.Group className="mb-3">
-                <Form.Label>Curso</Form.Label>
-                <Form.Control
-                  type="text"
-                  name="course"
-                  value={program.course || ''}
-                  onChange={handleChange}
-                  placeholder="Ej: Web Applications"
                 />
               </Form.Group>
               <Form.Group className="mb-3">
@@ -237,20 +242,7 @@ const Program = () => {
                   onChange={handleChange}
                 />
               </Form.Group>
-              <Form.Group className="mb-3">
-                <Form.Label>Asignatura</Form.Label>
-                <Form.Select
-                  value={selectedSignature}
-                  onChange={(e) => setSelectedSignature(e.target.value)}
-                >
-                  <option value="">Selecciona una asignatura</option>
-                  {signatures.map((sig) => (
-                    <option key={sig.id} value={sig.id}>
-                      {sig.curricular_unit}
-                    </option>
-                  ))}
-                </Form.Select>
-              </Form.Group>
+
             </Tab>
 
             <Tab eventKey="prereq" title="2. Prerrequisitos y Correquisitos">
@@ -258,17 +250,17 @@ const Program = () => {
                 <Form.Label>Course: Prerrequisitos</Form.Label>
                 <Form.Control
                   type="text"
-                  name="course"
-                  value={program.course || ''}
+                  name="prerequisite_course"
+                  value={program.prerequisite_course || ''}
                   onChange={handleChange}
                 />
               </Form.Group>
               <Form.Group className="mb-3">
-                <Form.Label>Código</Form.Label>
+                <Form.Label>Código Prerrequisito</Form.Label>
                 <Form.Control
                   type="text"
-                  name="code"
-                  value={program.code || ''}
+                  name="prerequisite_code"
+                  value={program.prerequisite_code || ''}
                   onChange={handleChange}
                 />
               </Form.Group>
@@ -276,17 +268,17 @@ const Program = () => {
                 <Form.Label>Course: Correquisitos</Form.Label>
                 <Form.Control
                   type="text"
-                  name="course"
-                  value={program.prerequisites || ''}
+                  name="corequisite_course"
+                  value={program.corequisite_course || ''}
                   onChange={handleChange}
                 />
               </Form.Group>
               <Form.Group className="mb-3">
-                <Form.Label>Código</Form.Label>
+                <Form.Label>Código Correquisito</Form.Label>
                 <Form.Control
                   type="text"
-                  name="code"
-                  value={program.corequisites || ''}
+                  name="corequisite_code"
+                  value={program.corequisite_code || ''}
                   onChange={handleChange}
                 />
               </Form.Group>

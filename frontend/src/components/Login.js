@@ -24,12 +24,18 @@ function Login() {
       const response = await axios.post(`${API_URL}/auth/login`, { email, password });
       const { token, user } = response.data;
       localStorage.setItem('token', token);
-      localStorage.setItem('userInfo', JSON.stringify(user)); // Guarda la información del usuario
+      localStorage.setItem('userInfo', JSON.stringify(user));
       setUserInfo(user);
       setMensaje(`Bienvenido, ${user.name} (${user.role})`);
-      setShowUserInfo(true); // Mostrar la información del usuario
+      setShowUserInfo(true);
+
+      // Si es invitado, redirige después de mostrar la bienvenida
+      if (user.role === 'invitado') {
+        setTimeout(() => {
+          navigate('/ver-syllabus');
+        }, 2000); // 2 segundos de espera
+      }
     } catch (err) {
-      console.error("Error en el cliente:", err.response?.data || err.message);
       setMensaje('Credenciales incorrectas');
     }
   };
@@ -117,12 +123,17 @@ function Login() {
             <p><strong>Rol:</strong> {userInfo.role}</p>
             <p><strong>Escuela:</strong> {userInfo.school}</p>
           </div>
-          <button 
-            onClick={handleContinue}
-            className="btn btn-primary w-100"
-          >
-            Continuar al Dashboard
-          </button>
+          {userInfo.role !== 'invitado' && (
+            <button 
+              onClick={handleContinue}
+              className="btn btn-primary w-100"
+            >
+              Continuar al Dashboard
+            </button>
+          )}
+          {userInfo.role === 'invitado' && (
+            <div className="alert alert-info">Redirigiendo a la lista de syllabus...</div>
+          )}
         </div>
       )}
 

@@ -107,6 +107,7 @@ const DashboardInicio = () => {
             </Col>
           ))}
         </Row>
+
       </Container>
     </div>
   );

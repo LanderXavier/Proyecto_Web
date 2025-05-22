@@ -10,5 +10,4 @@ router.post('/create', SyllabusController.createSyllabus);
 router.get('/syllabus', getAllSyllabus);//filtros
 //crear update**
 
-
 module.exports = router;

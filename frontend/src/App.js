@@ -6,6 +6,8 @@ import CursoProgram from './components/ProgramPdf';
 import VerPrograma from './components/VerPrograma';
 import VerSyllabus from './components/VerSyllabus';
 import DashboardInicio from './components/DashboardInicio'; // Asegúrate de crear este archivo
+
+
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 
