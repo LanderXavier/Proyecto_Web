@@ -21,7 +21,7 @@ const CursoFormato = ({ curso }) => {
           margin: 0,
           color: '#0c2340',
           fontWeight: 'bold',
-          fontSize: '22pt'
+          fontSize: '17pt'
         }}>YACHAY TECH UNIVERSITY</h2>
         <h2 style={{
           margin: 0,
@@ -45,7 +45,7 @@ const CursoFormato = ({ curso }) => {
               color: 'white',
               padding: '10px',
               fontWeight: 'bold',
-              fontSize: '14pt',
+              fontSize: '12pt',
               textAlign: 'center',
               border: '1px solid #000000',
               letterSpacing: '1px',
@@ -63,7 +63,7 @@ const CursoFormato = ({ curso }) => {
               border: '1px solid #000000',
               padding: '10px 12px',
               verticalAlign: 'middle',
-              fontSize: '11pt'
+              fontSize: '20pt'
             }}>A. SCHOOL</td>
             <td style={{
               width: '17%',

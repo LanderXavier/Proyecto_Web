@@ -151,6 +151,8 @@ function Login() {
                   required
                 />
               </div>
+
+              
               <div className="mb-3">
                 <label>Rol</label>
                 <select
@@ -165,16 +167,27 @@ function Login() {
                   <option value="supervisor">Profesor Supervisor</option>
                 </select>
               </div>
+
+
               <div className="mb-3">
                 <label>Escuela</label>
-                <input
-                  type="text"
+                <select
                   className="form-control"
                   value={registroSchool}
                   onChange={(e) => setRegistroSchool(e.target.value)}
                   required
-                />
+                >
+                  <option value="">Seleccione una escuela</option>
+                  <option value="Escuela de Ciencias Matematicas y Computacionales">Escuela de Ciencias Matemáticas y Computacionales</option> 
+                  <option value="Escuela de Ciencias Biologicas e Ingenieria">Escuela de Ciencias Biológicas e Ingeniería</option>
+                  <option value="Escuela de Ciencias Fisicas y Nanotecnologia">Escuela de Ciencias Físicas y Nanotecnología</option>
+                  <option value="scuela de Ciencias de la Tierra, Energia y Ambiente">Escuela de Ciencias de la Tierra, Energía y Ambiente</option>
+                  <option value="Escuela de Ciencias Químicas e Ingenieria">Escuela de Ciencias Químicas e Ingeniería</option>
+                  <option value="Escuela de Ciencias Agropecuarias y Agroindustriales">Escuela de Ciencias Agropecuarias y Agroindustriales</option>
+                </select>
               </div>
+
+
               {registroMensaje && (
                 <div className="alert alert-info text-center">{registroMensaje}</div>
               )}
