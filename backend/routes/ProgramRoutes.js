@@ -6,6 +6,9 @@ const ProgramController = require('../controllers/ProgramController');
 router.post('/create', ProgramController.createProgram);
 // Ruta para obtener todos los programas (cambiar nombre**)
 router.get('/programs', ProgramController.getPrograms);
-//crear update**
+// Ruta para eliminar un programa por ID
+router.delete('/:id', ProgramController.deleteProgram);
+// Ruta para actualizar el estado de un programa por ID
+router.patch('/:id/estado', ProgramController.updateEstado);
 
 module.exports = router;

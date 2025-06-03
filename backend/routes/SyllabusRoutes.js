@@ -9,5 +9,7 @@ router.post('/create', SyllabusController.createSyllabus);
 // obtener los syllabus
 router.get('/syllabus', getAllSyllabus);//filtros
 //crear update**
+router.delete('/:id', SyllabusController.deleteSyllabus);
+router.patch('/:id/estado', SyllabusController.updateEstado);
 
 module.exports = router;

@@ -39,6 +39,10 @@ app.use('/School', SchoolRoutes);
 
 
 // Iniciar servidor
-app.listen(8081, () => {
-  console.log('Server is running on port 8081');
+// app.listen(8081, () => {
+//   console.log('Server is running on port 8081');
+// });
+
+app.listen(8000, '0.0.0.0', () => {
+  console.log('Server is running on port 8000');
 });

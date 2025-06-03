@@ -69,6 +69,51 @@ const Program = sequelize.define('Program', {
     type: DataTypes.TEXT,
     allowNull: false,
   },
+  objectives: {
+    type: DataTypes.TEXT,
+    allowNull: true,
+  },
+  units: {
+    type: DataTypes.TEXT,
+    allowNull: true,
+  },
+  learningOutcomes: {
+    type: DataTypes.TEXT,
+    allowNull: true,
+  },
+  bibliographyMain: {
+    type: DataTypes.TEXT,
+    allowNull: true,
+  },
+  bibliographyComplementary: {
+    type: DataTypes.TEXT,
+    allowNull: true,
+  },
+  contribution: {
+    type: DataTypes.TEXT,
+    allowNull: true,
+  },
+  major: {
+    type: DataTypes.STRING,
+    allowNull: true,
+  },
+  course: {
+    type: DataTypes.STRING,
+    allowNull: true,
+  },
+  code: {
+    type: DataTypes.STRING,
+    allowNull: true,
+  },
+  study_mode: {
+    type: DataTypes.STRING,
+    allowNull: true,
+  },
+  estado: {
+    type: DataTypes.STRING,
+    allowNull: false,
+    defaultValue: 'pendiente',
+  },
 }, {
   tableName: 'Program', // Nombre de la tabla en la base de datos
   timestamps: false, // Si no necesitas columnas `createdAt` y `updatedAt`

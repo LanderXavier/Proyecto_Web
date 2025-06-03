@@ -25,7 +25,7 @@ services:
     ports:
       - "8000:8000"
     environment:
-      # - SECRET_KEY=tu_clave_secreta
+      - SECRET_KEY=tu_clave_secreta
       - DB_HOST=mysql_db1
       - DB_PORT=3306        
       - DB_USER=root
@@ -49,6 +49,9 @@ services:
     environment:
       # - REACT_APP_API_URL=http://node-backend:8000
       - REACT_APP_API_URL=http://localhost:8000
+    volumes:
+    - ./frontend:/app     # <--- este es el punto clave
+    command: npm start  
 
     depends_on:
       - backend

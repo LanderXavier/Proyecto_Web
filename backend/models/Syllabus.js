@@ -32,6 +32,11 @@ const Syllabus = sequelize.define('Syllabus', {
   bibliografia: {
     type: DataTypes.TEXT,
     allowNull: true,
+  },
+  estado: {
+    type: DataTypes.STRING,
+    allowNull: false,
+    defaultValue: 'pendiente',
   }
 }, {
   tableName: 'Syllabus',

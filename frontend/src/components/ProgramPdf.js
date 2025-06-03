@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { Button, Form, Card, Container, Tabs, Tab } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import axios from 'axios';
+import { FaPlus, FaTrash } from 'react-icons/fa';
 
 const Program = () => {
   const [program, setProgram] = useState({
@@ -29,6 +30,23 @@ const Program = () => {
   const [activeTab, setActiveTab] = useState('general');
   const [signatures, setSignatures] = useState([]);
   const [selectedSignature, setSelectedSignature] = useState('');
+  const [prerequisites, setPrerequisites] = useState([{ course: '', code: '' }]);
+  const [corequisites, setCorequisites] = useState([{ course: '', code: '' }]);
+  const [units, setUnits] = useState([
+    { unit: '', contents: [''] }
+  ]);
+
+  const [learningOutcomes, setLearningOutcomes] = useState([
+    { code: '', description: '' }
+  ]);
+
+  const [methodology, setMethodology] = useState('');
+  const [bibliographyMain, setBibliographyMain] = useState([
+    { author: '', title: '', edition: '', year: '', publisher: '', library: '' }
+  ]);
+  const [bibliographyComplementary, setBibliographyComplementary] = useState([
+    { author: '', title: '', edition: '', year: '', publisher: '', library: '' }
+  ]);
   const navigate = useNavigate();
 
   // Verificar si el token existe
@@ -80,6 +98,91 @@ const Program = () => {
     }));
   };
 
+  const handlePrereqChange = (idx, field, value) => {
+    const updated = prerequisites.map((item, i) =>
+      i === idx ? { ...item, [field]: value } : item
+    );
+    setPrerequisites(updated);
+  };
+
+  const handleCoreqChange = (idx, field, value) => {
+    const updated = corequisites.map((item, i) =>
+      i === idx ? { ...item, [field]: value } : item
+    );
+    setCorequisites(updated);
+  };
+
+  const handleUnitChange = (idx, value) => {
+    const updated = units.map((item, i) =>
+      i === idx ? { ...item, unit: value } : item
+    );
+    setUnits(updated);
+  };
+
+  const handleContentChange = (unitIdx, contentIdx, value) => {
+    const updated = units.map((item, i) =>
+      i === unitIdx
+        ? { ...item, contents: item.contents.map((c, j) => j === contentIdx ? value : c) }
+        : item
+    );
+    setUnits(updated);
+  };
+
+  // Learning Outcomes
+  const handleLearningOutcomeChange = (idx, field, value) => {
+    const updated = learningOutcomes.map((item, i) =>
+      i === idx ? { ...item, [field]: value } : item
+    );
+    setLearningOutcomes(updated);
+  };
+  const addLearningOutcome = () => setLearningOutcomes([...learningOutcomes, { description: '' }]);
+  const removeLearningOutcome = (idx) => setLearningOutcomes(learningOutcomes.filter((_, i) => i !== idx));
+
+  // Bibliografía principal
+  const handleBibliographyMainChange = (idx, field, value) => {
+    const updated = bibliographyMain.map((item, i) =>
+      i === idx ? { ...item, [field]: value } : item
+    );
+    setBibliographyMain(updated);
+  };
+  const addBibliographyMain = () => setBibliographyMain([...bibliographyMain, { author: '', title: '', edition: '', year: '', publisher: '', library: '' }]);
+  const removeBibliographyMain = (idx) => setBibliographyMain(bibliographyMain.filter((_, i) => i !== idx));
+
+  // Bibliografía complementaria
+  const handleBibliographyComplementaryChange = (idx, field, value) => {
+    const updated = bibliographyComplementary.map((item, i) =>
+      i === idx ? { ...item, [field]: value } : item
+    );
+    setBibliographyComplementary(updated);
+  };
+  const addBibliographyComplementary = () => setBibliographyComplementary([...bibliographyComplementary, { author: '', title: '', edition: '', year: '', publisher: '', library: '' }]);
+  const removeBibliographyComplementary = (idx) => setBibliographyComplementary(bibliographyComplementary.filter((_, i) => i !== idx));
+
+  const addPrerequisite = () => setPrerequisites([...prerequisites, { course: '', code: '' }]);
+  const removePrerequisite = (idx) => setPrerequisites(prerequisites.filter((_, i) => i !== idx));
+
+  const addCorequisite = () => setCorequisites([...corequisites, { course: '', code: '' }]);
+  const removeCorequisite = (idx) => setCorequisites(corequisites.filter((_, i) => i !== idx));
+
+  const addUnit = () => setUnits([...units, { unit: '', contents: [''] }]);
+  const removeUnit = (idx) => setUnits(units.filter((_, i) => i !== idx));
+
+  const addContent = (unitIdx) => {
+    const updated = units.map((item, i) =>
+      i === unitIdx ? { ...item, contents: [...item.contents, ''] } : item
+    );
+    setUnits(updated);
+  };
+
+  const removeContent = (unitIdx, contentIdx) => {
+    const updated = units.map((item, i) =>
+      i === unitIdx
+        ? { ...item, contents: item.contents.filter((_, j) => j !== contentIdx) }
+        : item
+    );
+    setUnits(updated);
+  };
+
   const handleSaveToDatabase = async () => {
     try {
       const token = localStorage.getItem('token');
@@ -90,20 +193,19 @@ const Program = () => {
       }
 
       // Validar que los campos requeridos no estén vacíos
-      if (
-        !program.curricular_unit ||
-        !program.content ||
-        !program.teaching_hours ||
-        !program.internship_hours ||
-        !program.independent_learning_hours ||
-        !program.total_hours ||
-        !program.semester ||
-        !program.school ||
-        !program.methodology ||
-        !program.learning_outcomes ||
-        !program.bibliography
-      ) {
-        alert('Por favor, completa todos los campos obligatorios.');
+      const missingFields = [];
+
+      if (!program.curricular_unit) missingFields.push('Unidad Curricular');
+      if (!program.content) missingFields.push('Descripción');
+      if (!program.total_hours) missingFields.push('Total de Horas');
+      if (!program.semester) missingFields.push('Semestre');
+      if (!program.school) missingFields.push('Escuela');
+      if (!methodology) missingFields.push('Metodología');
+      if (!learningOutcomes.length || !learningOutcomes[0].description) missingFields.push('Learning Outcomes');
+      if (!bibliographyMain.length || !bibliographyMain[0].author) missingFields.push('Bibliografía Principal');
+
+      if (missingFields.length > 0) {
+        alert('Por favor, completa los siguientes campos obligatorios:\n' + missingFields.join('\n'));
         return;
       }
 
@@ -111,6 +213,13 @@ const Program = () => {
         `${process.env.REACT_APP_API_URL}/program/create`,
         {
           ...program,
+          prerequisites: JSON.stringify(prerequisites),
+          corequisites: JSON.stringify(corequisites),
+          units: JSON.stringify(units),
+          learningOutcomes: JSON.stringify(learningOutcomes),
+          methodology,
+          bibliographyMain: JSON.stringify(bibliographyMain),
+          bibliographyComplementary: JSON.stringify(bibliographyComplementary),
           signature_id: selectedSignature,
         },
         {
@@ -246,42 +355,59 @@ const Program = () => {
             </Tab>
 
             <Tab eventKey="prereq" title="2. Prerrequisitos y Correquisitos">
-              <Form.Group className="mb-3">
-                <Form.Label>Course: Prerrequisitos</Form.Label>
-                <Form.Control
-                  type="text"
-                  name="prerequisite_course"
-                  value={program.prerequisite_course || ''}
-                  onChange={handleChange}
-                />
-              </Form.Group>
-              <Form.Group className="mb-3">
-                <Form.Label>Código Prerrequisito</Form.Label>
-                <Form.Control
-                  type="text"
-                  name="prerequisite_code"
-                  value={program.prerequisite_code || ''}
-                  onChange={handleChange}
-                />
-              </Form.Group>
-              <Form.Group className="mb-3">
-                <Form.Label>Course: Correquisitos</Form.Label>
-                <Form.Control
-                  type="text"
-                  name="corequisite_course"
-                  value={program.corequisite_course || ''}
-                  onChange={handleChange}
-                />
-              </Form.Group>
-              <Form.Group className="mb-3">
-                <Form.Label>Código Correquisito</Form.Label>
-                <Form.Control
-                  type="text"
-                  name="corequisite_code"
-                  value={program.corequisite_code || ''}
-                  onChange={handleChange}
-                />
-              </Form.Group>
+              <h5>Prerrequisitos</h5>
+              {prerequisites.map((item, idx) => (
+                <div key={idx} className="d-flex align-items-center mb-2">
+                  <Form.Control
+                    type="text"
+                    placeholder="Curso"
+                    value={item.course}
+                    onChange={e => handlePrereqChange(idx, 'course', e.target.value)}
+                    className="me-2"
+                  />
+                  <Form.Control
+                    type="text"
+                    placeholder="Código"
+                    value={item.code}
+                    onChange={e => handlePrereqChange(idx, 'code', e.target.value)}
+                    className="me-2"
+                  />
+                  <Button variant="danger" size="sm" onClick={() => removePrerequisite(idx)} disabled={prerequisites.length === 1}>
+                    <FaTrash />
+                  </Button>
+                </div>
+              ))}
+              <Button variant="success" size="sm" onClick={addPrerequisite}>
+                <FaPlus /> Agregar 
+              </Button>
+
+              <hr />
+
+              <h5>Correquisitos</h5>
+              {corequisites.map((item, idx) => (
+                <div key={idx} className="d-flex align-items-center mb-2">
+                  <Form.Control
+                    type="text"
+                    placeholder="Curso"
+                    value={item.course}
+                    onChange={e => handleCoreqChange(idx, 'course', e.target.value)}
+                    className="me-2"
+                  />
+                  <Form.Control
+                    type="text"
+                    placeholder="Código"
+                    value={item.code}
+                    onChange={e => handleCoreqChange(idx, 'code', e.target.value)}
+                    className="me-2"
+                  />
+                  <Button variant="danger" size="sm" onClick={() => removeCorequisite(idx)} disabled={corequisites.length === 1}>
+                    <FaTrash />
+                  </Button>
+                </div>
+              ))}
+              <Button variant="success" size="sm" onClick={addCorequisite}>
+                <FaPlus /> Agregar 
+              </Button>
             </Tab>
 
             <Tab eventKey="description" title="3. Descripción del Curso">
@@ -310,64 +436,226 @@ const Program = () => {
                 />
               </Form.Group>
             </Tab>
-            <Tab eventKey="otros" title="5. Otros">
+            <Tab eventKey="objextives" title="5. Objetivos del curso">
               <Form.Group className="mb-3">
-                <Form.Label>Horas de Enseñanza</Form.Label>
-                <Form.Control
-                  type="number"
-                  name="teaching_hours"
-                  value={program.teaching_hours}
-                  onChange={handleChange}
-                />
-              </Form.Group>
-              <Form.Group className="mb-3">
-                <Form.Label>Horas de Prácticas</Form.Label>
-                <Form.Control
-                  type="number"
-                  name="internship_hours"
-                  value={program.internship_hours}
-                  onChange={handleChange}
-                />
-              </Form.Group>
-              <Form.Group className="mb-3">
-                <Form.Label>Horas de Aprendizaje Independiente</Form.Label>
-                <Form.Control
-                  type="number"
-                  name="independent_learning_hours"
-                  value={program.independent_learning_hours}
-                  onChange={handleChange}
-                />
-              </Form.Group>
-              <Form.Group className="mb-3">
-                <Form.Label>Metodología</Form.Label>
+                <Form.Label>Objetivos</Form.Label>
                 <Form.Control
                   as="textarea"
                   rows={2}
+                  name="objectives"
+                  value={program.objectives || ''}
+                  onChange={handleChange}
+                  placeholder="Describe los objetivos del curso..."
+                />
+              </Form.Group>
+            </Tab>
+            <Tab eventKey="units" title="6. Units / Contents">
+              {units.map((unit, unitIdx) => (
+                <Card key={unitIdx} className="mb-3">
+                  <Card.Body>
+                    <div className="d-flex align-items-center mb-2">
+                      <Form.Control
+                        type="text"
+                        placeholder={`Unit ${unitIdx + 1} (ej: Unit 1)`}
+                        value={unit.unit}
+                        onChange={e => handleUnitChange(unitIdx, e.target.value)}
+                        className="me-2"
+                      />
+                      <Button
+                        variant="danger"
+                        size="sm"
+                        onClick={() => removeUnit(unitIdx)}
+                        disabled={units.length === 1}
+                      >
+                        <FaTrash />
+                      </Button>
+                    </div>
+                    <h6>Contents</h6>
+                    {unit.contents.map((content, contentIdx) => (
+                      <div key={contentIdx} className="d-flex align-items-center mb-2">
+                        <Form.Control
+                          type="text"
+                          placeholder={`Contenido ${contentIdx + 1}`}
+                          value={content}
+                          onChange={e => handleContentChange(unitIdx, contentIdx, e.target.value)}
+                          className="me-2"
+                        />
+                        <Button
+                          variant="danger"
+                          size="sm"
+                          onClick={() => removeContent(unitIdx, contentIdx)}
+                          disabled={unit.contents.length === 1}
+                        >
+                          <FaTrash />
+                        </Button>
+                      </div>
+                    ))}
+                    <Button
+                      variant="success"
+                      size="sm"
+                      onClick={() => addContent(unitIdx)}
+                    >
+                      <FaPlus /> Agregar Contenido
+                    </Button>
+                  </Card.Body>
+                </Card>
+              ))}
+              <Button variant="primary" size="sm" onClick={addUnit}>
+                <FaPlus /> Agregar Unidad
+              </Button>
+            </Tab>
+
+            <Tab eventKey="learningOutcomes" title="7. Learning outcomes of the course">
+              <h5>Learning Outcomes</h5>
+              {learningOutcomes.map((item, idx) => (
+                <div key={idx} className="d-flex align-items-center mb-2">
+                  <Form.Control
+                    type="text"
+                    placeholder="Description"
+                    value={item.description}
+                    onChange={e => handleLearningOutcomeChange(idx, 'description', e.target.value)}
+                    className="me-2"
+                  />
+                  <Button variant="danger" size="sm" onClick={() => removeLearningOutcome(idx)} disabled={learningOutcomes.length === 1}>
+                    <FaTrash />
+                  </Button>
+                </div>
+              ))}
+              <Button variant="success" size="sm" onClick={addLearningOutcome}>
+                <FaPlus /> Agregar 
+              </Button>
+            </Tab>
+
+            <Tab eventKey="methodology" title="8. Methodology">
+              <Form.Group className="mb-3">
+                <Form.Label>Methodology</Form.Label>
+                <Form.Control
+                  as="textarea"
+                  rows={5}
                   name="methodology"
-                  value={program.methodology}
-                  onChange={handleChange}
+                  value={methodology}
+                  onChange={e => setMethodology(e.target.value)}
+                  placeholder="Describe la metodología aquí..."
                 />
               </Form.Group>
-              <Form.Group className="mb-3">
-                <Form.Label>Resultados de Aprendizaje</Form.Label>
-                <Form.Control
-                  as="textarea"
-                  rows={2}
-                  name="learning_outcomes"
-                  value={program.learning_outcomes}
-                  onChange={handleChange}
-                />
-              </Form.Group>
-              <Form.Group className="mb-3">
-                <Form.Label>Bibliografía</Form.Label>
-                <Form.Control
-                  as="textarea"
-                  rows={2}
-                  name="bibliography"
-                  value={program.bibliography}
-                  onChange={handleChange}
-                />
-              </Form.Group>
+            </Tab>
+
+            <Tab eventKey="bibliography" title="9. Information Sources (Bibliography)">
+              <h5>9.1 Main</h5>
+              {bibliographyMain.map((item, idx) => (
+                <div key={idx} className="d-flex align-items-center mb-2 flex-wrap">
+                  <Form.Control
+                    type="text"
+                    placeholder="Author/s"
+                    value={item.author}
+                    onChange={e => handleBibliographyMainChange(idx, 'author', e.target.value)}
+                    className="me-2 mb-2"
+                  />
+                  <Form.Control
+                    type="text"
+                    placeholder="Title of Work"
+                    value={item.title}
+                    onChange={e => handleBibliographyMainChange(idx, 'title', e.target.value)}
+                    className="me-2 mb-2"
+                  />
+                  <Form.Control
+                    type="text"
+                    placeholder="Edition"
+                    value={item.edition}
+                    onChange={e => handleBibliographyMainChange(idx, 'edition', e.target.value)}
+                    className="me-2 mb-2"
+                    style={{ maxWidth: 100 }}
+                  />
+                  <Form.Control
+                    type="text"
+                    placeholder="Year"
+                    value={item.year}
+                    onChange={e => handleBibliographyMainChange(idx, 'year', e.target.value)}
+                    className="me-2 mb-2"
+                    style={{ maxWidth: 100 }}
+                  />
+                  <Form.Control
+                    type="text"
+                    placeholder="Publisher"
+                    value={item.publisher}
+                    onChange={e => handleBibliographyMainChange(idx, 'publisher', e.target.value)}
+                    className="me-2 mb-2"
+                  />
+                  <Form.Control
+                    type="text"
+                    placeholder="Library (Yes/No)"
+                    value={item.library}
+                    onChange={e => handleBibliographyMainChange(idx, 'library', e.target.value)}
+                    className="me-2 mb-2"
+                    style={{ maxWidth: 120 }}
+                  />
+                  <Button variant="danger" size="sm" onClick={() => removeBibliographyMain(idx)} disabled={bibliographyMain.length === 1}>
+                    <FaTrash />
+                  </Button>
+                </div>
+              ))}
+              <Button variant="success" size="sm" onClick={addBibliographyMain}>
+                <FaPlus /> Agregar 
+              </Button>
+
+              <hr />
+
+              <h5>9.2 Complementary</h5>
+              {bibliographyComplementary.map((item, idx) => (
+                <div key={idx} className="d-flex align-items-center mb-2 flex-wrap">
+                  <Form.Control
+                    type="text"
+                    placeholder="Author/s"
+                    value={item.author}
+                    onChange={e => handleBibliographyComplementaryChange(idx, 'author', e.target.value)}
+                    className="me-2 mb-2"
+                  />
+                  <Form.Control
+                    type="text"
+                    placeholder="Title of Work"
+                    value={item.title}
+                    onChange={e => handleBibliographyComplementaryChange(idx, 'title', e.target.value)}
+                    className="me-2 mb-2"
+                  />
+                  <Form.Control
+                    type="text"
+                    placeholder="Edition"
+                    value={item.edition}
+                    onChange={e => handleBibliographyComplementaryChange(idx, 'edition', e.target.value)}
+                    className="me-2 mb-2"
+                    style={{ maxWidth: 100 }}
+                  />
+                  <Form.Control
+                    type="text"
+                    placeholder="Year"
+                    value={item.year}
+                    onChange={e => handleBibliographyComplementaryChange(idx, 'year', e.target.value)}
+                    className="me-2 mb-2"
+                    style={{ maxWidth: 100 }}
+                  />
+                  <Form.Control
+                    type="text"
+                    placeholder="Publisher"
+                    value={item.publisher}
+                    onChange={e => handleBibliographyComplementaryChange(idx, 'publisher', e.target.value)}
+                    className="me-2 mb-2"
+                  />
+                  <Form.Control
+                    type="text"
+                    placeholder="Library (Yes/No)"
+                    value={item.library}
+                    onChange={e => handleBibliographyComplementaryChange(idx, 'library', e.target.value)}
+                    className="me-2 mb-2"
+                    style={{ maxWidth: 120 }}
+                  />
+                  <Button variant="danger" size="sm" onClick={() => removeBibliographyComplementary(idx)} disabled={bibliographyComplementary.length === 1}>
+                    <FaTrash />
+                  </Button>
+                </div>
+              ))}
+              <Button variant="success" size="sm" onClick={addBibliographyComplementary}>
+                <FaPlus /> Agregar
+              </Button>
             </Tab>
           </Tabs>
         </Card.Body>

@@ -36,3 +36,34 @@ exports.getAllSyllabus = async (req, res) => {
   }
 };
 
+exports.deleteSyllabus = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const deleted = await Syllabus.destroy({ where: { syllabus_id: id } });
+    if (deleted) {
+      return res.status(200).json({ message: 'Syllabus eliminado correctamente' });
+    } else {
+      return res.status(404).json({ message: 'Syllabus no encontrado' });
+    }
+  } catch (error) {
+    console.error('Error al eliminar el syllabus:', error);
+    return res.status(500).json({ message: 'Error al eliminar el syllabus', error });
+  }
+};
+
+exports.updateEstado = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { estado } = req.body;
+    const updated = await Syllabus.update({ estado }, { where: { syllabus_id: id } });
+    if (updated[0]) {
+      return res.status(200).json({ message: 'Estado actualizado correctamente' });
+    } else {
+      return res.status(404).json({ message: 'Syllabus no encontrado' });
+    }
+  } catch (error) {
+    console.error('Error al actualizar el estado:', error);
+    return res.status(500).json({ message: 'Error al actualizar el estado', error });
+  }
+};
+

@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Table, Container, Button } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import { FaTrash } from 'react-icons/fa';
 
 const VerSyllabus = () => {
   const [syllabusList, setSyllabusList] = useState([]);
@@ -39,6 +40,32 @@ const VerSyllabus = () => {
     );
   });
 
+  const handleDelete = async (id) => {
+    if (window.confirm('¿Seguro que deseas eliminar este syllabus?')) {
+      try {
+        const token = localStorage.getItem('token');
+        await axios.delete(`${process.env.REACT_APP_API_URL}/Syllabus/${id}`, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        setSyllabusList(syllabusList.filter((s) => s.syllabus_id !== id));
+      } catch (error) {
+        alert('Error al eliminar el syllabus');
+      }
+    }
+  };
+
+  const handleEstadoChange = async (id, estado) => {
+    try {
+      const token = localStorage.getItem('token');
+      await axios.patch(`${process.env.REACT_APP_API_URL}/Syllabus/${id}/estado`, { estado }, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      setSyllabusList(syllabusList.map((s) => s.syllabus_id === id ? { ...s, estado } : s));
+    } catch (error) {
+      alert('Error al actualizar el estado');
+    }
+  };
+
   return (
     <Container className="mt-5">
       <h2 className="text-center mb-4">Lista de Syllabus</h2>
@@ -58,6 +85,8 @@ const VerSyllabus = () => {
             <th>ID Programa</th>
             <th>Nombre Syllabus</th>
             <th>Ver PDF</th>
+            <th>Estado</th>
+            <th>Acciones</th>
           </tr>
         </thead>
         <tbody>
@@ -78,6 +107,17 @@ const VerSyllabus = () => {
                 ) : (
                   <span className="text-muted">No disponible</span>
                 )}
+              </td>
+              <td>
+                <select value={syllabus.estado || 'pendiente'} onChange={e => handleEstadoChange(syllabus.syllabus_id, e.target.value)}>
+                  <option value="pendiente">Pendiente</option>
+                  <option value="revisado">Revisado</option>
+                </select>
+              </td>
+              <td>
+                <Button variant="danger" size="sm" onClick={() => handleDelete(syllabus.syllabus_id)}>
+                  <FaTrash />
+                </Button>
               </td>
             </tr>
           ))}
